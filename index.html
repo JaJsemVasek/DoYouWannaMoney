@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Business Empire: Live Sync</title>
+    <title>Business Empire: Supreme Offline</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="BizLive">
+    <meta name="apple-mobile-web-app-title" content="BizEmpire">
 
     <style>
         :root {
@@ -54,6 +54,7 @@
             align-items: center;
             font-size: 11px;
             margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .main-hud {
@@ -66,6 +67,7 @@
             box-sizing: border-box;
             text-align: center;
             margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         }
 
         .balance {
@@ -134,9 +136,9 @@
 
         .clicker-wrap { display: flex; flex-direction: column; align-items: center; padding: 15px 0; }
         .click-vault-btn {
-            width: 130px; height: 130px; border-radius: 50%;
+            width: 120px; height: 120px; border-radius: 50%;
             background: radial-gradient(circle, #2563eb 0%, #1d4ed8 100%);
-            border: 4px solid #3b82f6; font-size: 46px;
+            border: 4px solid #3b82f6; font-size: 42px;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
             box-shadow: 0 0 30px rgba(59, 130, 246, 0.4); margin-bottom: 20px;
         }
@@ -154,19 +156,16 @@
         .case-anim-box { background-color: #070a12; border-radius: 8px; padding: 10px; margin: 10px 0; font-weight: 700; font-size: 13px; text-align: center; color: var(--text-muted); border: 1px dashed #334155; }
         .reset-btn { background: none; border: 1px solid var(--color-red); color: var(--color-red); padding: 4px 8px; border-radius: 6px; font-size: 10px; margin-top: 25px; opacity: 0.3; cursor: pointer;}
         
-        #sync-status-text { font-size: 11px; font-weight: bold; text-align: center; margin-top: 5px; }
+        .sync-input-area { width: 100%; background: #070a12; border: 1px solid var(--border); color: var(--color-gold); padding: 8px; border-radius: 8px; font-family: monospace; font-size: 10px; box-sizing: border-box; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <!-- PROFILOVÁ LIŠTA -->
     <div class="profile-bar">
-        <div>ID: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">---</span></div>
+        <div>Profil: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">---</span></div>
         <div>Rank: <span id="profile-rank-display" style="color:var(--color-purple); font-weight:bold;">Začátečník</span></div>
-        <button class="btn btn-small" onclick="switchProfilePrompt()">Načíst / Přenést</button>
     </div>
 
-    <!-- HORNÍ HUD PANEL -->
     <div id="main-hud-panel" class="main-hud">
         <div class="section-title" style="margin:0;">Finanční Impérium</div>
         <div id="balance" class="balance">$1,000</div>
@@ -177,7 +176,6 @@
         </div>
     </div>
 
-    <!-- SPODNÍ NAVIGACE -->
     <div class="bottom-nav">
         <button class="nav-btn active" id="nav-clicker" onclick="switchTab('clicker')">
             <span class="icon">🖱️</span><span>Klik / Trh</span>
@@ -189,11 +187,10 @@
             <span class="icon">🎰</span><span>Hazard</span>
         </button>
         <button class="nav-btn" id="nav-settings" onclick="switchTab('settings')">
-            <span class="icon">🏆</span><span>Žebříček</span>
+            <span class="icon">🏆</span><span>Sín slávy</span>
         </button>
     </div>
 
-    <!-- TAB 1: KLIKER & TRH -->
     <div id="tab-clicker" class="tab-content active">
         <div class="clicker-wrap">
             <div class="click-vault-btn" onclick="clickVault()">💎</div>
@@ -222,7 +219,6 @@
                 </div>
             </div>
         </div>
-
         <div class="card">
             <div class="info-block">
                 <h3>🪙 CyberCoin (CBC)</h3>
@@ -239,7 +235,6 @@
         </div>
     </div>
 
-    <!-- TAB 2: BYZNYS -->
     <div id="tab-business" class="tab-content">
         <div class="section-title">Pasivní Výdělek</div>
         <div class="card">
@@ -292,9 +287,7 @@
         </div>
     </div>
 
-    <!-- TAB 3: HAZARD -->
     <div id="tab-gambling" class="tab-content">
-        <div class="section-title">Kolo Štěstí</div>
         <div class="casino-box">
             <p style="font-size:11px; color:var(--text-muted); margin:0 0 8px 0; text-align:center;">Zvol vklad žetonu:</p>
             <div class="bet-grid">
@@ -308,7 +301,7 @@
             <p id="casino-timer" style="font-size:10px; color:var(--text-muted); margin-top:6px; text-align:center;"></p>
         </div>
 
-        <div class="section-title">Otevírání beden (Case Opening)</div>
+        <div class="section-title">Otevírání beden</div>
         <div class="card" style="flex-direction:column; align-items:stretch; gap:10px;">
             <div style="display:flex; justify-content:between; align-items:center;">
                 <div>
@@ -332,13 +325,17 @@
         </div>
     </div>
 
-    <!-- TAB 4: ŽEBŘÍČEK -->
     <div id="tab-settings" class="tab-content">
-        <div class="section-title">🏆 Globální Žebříček (Live Server)</div>
+        <div class="section-title">📲 Přenos postupu (PC 🤝 Mobil)</div>
+        <div class="card" style="flex-direction:column; align-items:stretch; gap:8px;">
+            <button class="btn btn-success" onclick="exportSaveCode()">1. Vygenerovat kód postupu</button>
+            <button class="btn btn-purple" onclick="importSaveCode()">2. Načíst kód postupu</button>
+            <textarea id="sync-text-area" class="sync-input-area" rows="3" placeholder="Sem se vygeneruje kód, nebo ho sem vlož pro načtení..."></textarea>
+        </div>
+
+        <div class="section-title">🏆 Síň Slávy (Tvoje Rekordy)</div>
         <div class="card" style="flex-direction:column; align-items:stretch;">
-            <div id="leaderboard-box" class="leaderboard-list">Načítám online žebříček...</div>
-            <button class="btn btn-small" style="margin-top:10px;" onclick="loadLeaderboard()">🔄 Obnovit žebříček</button>
-            <div id="sync-status-text" style="color: var(--text-muted);">Stav cloudu: Neznámý</div>
+            <div id="leaderboard-box" class="leaderboard-list">Žádné uložené rekordy.</div>
         </div>
         <center><button class="reset-btn" onclick="resetGame()">Smazat místní data</button></center>
     </div>
@@ -347,6 +344,7 @@
         // --- DATA JÁDRO ---
         const DEFAULT_STATE = {
             balance: 1000, clickPower: 1, clickUpgradeCost: 150, clickUpgradeStep: 2, selectedBet: 100, lastSpinTime: 0,
+            profileName: "HRAC-" + Math.floor(1000 + Math.random() * 9000),
             businesses: {
                 cafe: { count: 0, cost: 400, baseIncome: 8, level: 1, upgradeCost: 600 },
                 bank: { count: 0, cost: 350000, baseIncome: 4200, level: 1, upgradeCost: 400000 },
@@ -359,119 +357,83 @@
             }
         };
 
-        let currentProfileId = "";
         let state = {};
-        
-        // PŘECHOD NA NOVÝ NEOMEZENÝ API BACKEND (JSONBIN)
-        const BACKEND_API = "https://api.jsonbin.io/v3/b/66185bbbe41b4d34e4e1dfcb"; 
+        let localRecords = [];
 
-        // --- NAČTENÍ PROFILU SE ZÁLOŽNÍM LOKÁLNÍM SAVE ---
-        async function initProfile() {
-            let activeId = localStorage.getItem('bizActiveProfileId');
-            if (!activeId) {
-                activeId = "ID-" + Math.floor(1000 + Math.random() * 9000);
-                localStorage.setItem('bizActiveProfileId', activeId);
-            }
-            currentProfileId = activeId;
-            document.getElementById('profile-id-display').innerText = currentProfileId;
-            
-            // Vezmeme nejdřív lokální kopii, abychom mohli hned hrát
-            let savedData = localStorage.getItem('bizProfile_' + currentProfileId);
+        function initProfile() {
+            let savedData = localStorage.getItem('bizOfflineSave');
             state = savedData ? JSON.parse(savedData) : JSON.parse(JSON.stringify(DEFAULT_STATE));
+            
+            // Ošetření struktur při načítání
+            if(!state.profileName) state.profileName = "HRAC-" + Math.floor(1000 + Math.random() * 9000);
+            if(!state.market) state.market = JSON.parse(JSON.stringify(DEFAULT_STATE.market));
+            
+            document.getElementById('profile-id-display').innerText = state.profileName;
 
-            // Pokusíme se synchronizovat data z cloudu na pozadí
-            try {
-                let res = await fetch(BACKEND_API + "/latest");
-                if (res.ok) {
-                    let cloudRes = await res.json();
-                    if (cloudRes.record && cloudRes.record[currentProfileId]) {
-                        state = cloudRes.record[currentProfileId];
-                        document.getElementById('sync-status-text').innerHTML = "✅ Cloud data načtena úspěšně";
-                        document.getElementById('sync-status-text').style.color = "var(--color-green)";
-                    }
-                }
-            } catch(e) { console.log("Cloud momentálně nedostupný, hrajeme offline."); }
+            // Načtení síně slávy
+            let savedRecords = localStorage.getItem('bizLocalRecords');
+            localRecords = savedRecords ? JSON.parse(savedRecords) : [];
 
             selectBet(state.selectedBet || 100);
             updateRank();
             updateUI();
-            loadLeaderboard();
+            refreshLeaderboard();
         }
 
-        // --- ODESÍLÁNÍ DATA NA INTERNET (ZÁCHRANNÝ MECHANISMUS) ---
-        async function save() {
-            if(!currentProfileId) return;
-            localStorage.setItem('bizProfile_' + currentProfileId, JSON.stringify(state));
+        function save() {
+            localStorage.setItem('bizOfflineSave', JSON.stringify(state));
             
-            try {
-                // Nejdřív si stáhneme aktuální balík všech hráčů ze serveru
-                let getRes = await fetch(BACKEND_API + "/latest");
-                let masterRecord = {};
-                if(getRes.ok) {
-                    let json = await getRes.json();
-                    masterRecord = json.record || {};
-                }
-                
-                // Přidáme/Aktualizujeme náš profil v balíku
-                masterRecord[currentProfileId] = state;
-
-                // Nahrajeme celý balík zpět na cloud server
-                let putRes = await fetch(BACKEND_API, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Bin-Meta': 'false'
-                    },
-                    body: JSON.stringify(masterRecord)
-                });
-
-                let statusText = document.getElementById('sync-status-text');
-                if(putRes.ok && statusText) {
-                    statusText.innerHTML = "✅ Data uložena na cloud";
-                    statusText.style.color = "var(--color-green)";
-                }
-            } catch(e) {
-                let statusText = document.getElementById('sync-status-text');
-                if(statusText) {
-                    statusText.innerHTML = "❌ Lokální režim (Chyba cloudu)";
-                    statusText.style.color = "var(--color-red)";
-                }
+            // Ukládání tvého aktuálního skóre do žebříčku rekordů
+            let existingIdx = localRecords.findIndex(r => r.id === state.profileName);
+            if(existingIdx !== -1) {
+                localRecords[existingIdx].balance = state.balance;
+            } else {
+                localRecords.push({ id: state.profileName, balance: state.balance });
             }
+            localRecords.sort((a,b) => b.balance - a.balance);
+            localStorage.setItem('bizLocalRecords', JSON.stringify(localRecords));
         }
 
-        async function loadLeaderboard() {
+        // --- EXPORT A IMPORT SAVU (TRIK PRO GITHUB) ---
+        function exportSaveCode() {
+            save();
+            // Zašifrujeme data hry do Base64 textu
+            let encrypted = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+            document.getElementById('sync-text-area').value = encrypted;
+            document.getElementById('sync-text-area').select();
+            alert("Kód tvé hry byl vygenerován a zkopírován do textového pole. Pošli si ho na mobil!");
+        }
+
+        function importSaveCode() {
+            let code = document.getElementById('sync-text-area').value.trim();
+            if(!code) { alert("Nejdřív vlož kód do textového pole!"); return; }
+            try {
+                // Rozšifrujeme text zpět na herní data
+                let decrypted = decodeURIComponent(escape(atob(code)));
+                let parsed = JSON.parse(decrypted);
+                if(parsed.balance && parsed.businesses) {
+                    state = parsed;
+                    save();
+                    alert("Postup byl úspěšně načten!");
+                    location.reload();
+                } else { alert("Chybný kód hry!"); }
+            } catch(e) { alert("Tento kód není správný nebo je poškozený."); }
+        }
+
+        function refreshLeaderboard() {
             let box = document.getElementById('leaderboard-box');
-            try {
-                let res = await fetch(BACKEND_API + "/latest");
-                if(res.ok) {
-                    let json = await res.json();
-                    let masterRecord = json.record || {};
-                    let players = [];
-                    
-                    for(let key in masterRecord) {
-                        players.push({ id: key, balance: masterRecord[key].balance || 0 });
-                    }
-                    
-                    players.sort((a,b) => b.balance - a.balance);
-                    box.innerHTML = "";
-                    players.slice(0, 5).forEach((p, idx) => {
-                        box.innerHTML += `
-                            <div class="leaderboard-item">
-                                <div>${idx + 1}. 👑 <b>${p.id}</b></div>
-                                <div style="color:var(--color-green)">$${Math.floor(p.balance).toLocaleString()}</div>
-                            </div>`;
-                    });
-                }
-            } catch(e) { box.innerHTML = "Žebříček se nepodařilo stáhnout."; }
-        }
-
-        function switchProfilePrompt() {
-            let targetId = prompt("Zadej své ID profilu. Stejné ID na PC i mobilu ti zajistí synchronizaci:", currentProfileId);
-            if (targetId && targetId.trim() !== "") {
-                targetId = targetId.trim().toUpperCase();
-                localStorage.setItem('bizActiveProfileId', targetId);
-                location.reload();
+            if(localRecords.length === 0) {
+                box.innerHTML = "Zatím žádné rekordy.";
+                return;
             }
+            box.innerHTML = "";
+            localRecords.slice(0, 5).forEach((p, idx) => {
+                box.innerHTML += `
+                    <div class="leaderboard-item">
+                        <div>${idx + 1}. 🎖️ <b>${p.id}</b></div>
+                        <div style="color:var(--color-green)">$${Math.floor(p.balance).toLocaleString()}</div>
+                    </div>`;
+            });
         }
 
         function updateRank() {
@@ -497,7 +459,7 @@
                     }
                 }, 50);
             }
-            if(tabId === 'settings') loadLeaderboard();
+            if(tabId === 'settings') refreshLeaderboard();
         }
 
         function clickVault() { state.balance += state.clickPower; updateUI(); }
@@ -591,7 +553,6 @@
             emerald: [{name:"⚙️ GPU Rig",v:24000,c:"#a855f7"}, {name:"👑 Nůž ★",v:380000,c:"#fbbf24"}]
         };
 
-        type = 'case';
         function openCase(tier, cost) {
             if (state.balance < cost) return;
             state.balance -= cost; updateUI();
@@ -674,15 +635,10 @@
             document.getElementById('biz-rig-cost').innerText = state.businesses.rig.cost.toLocaleString();
             document.getElementById('biz-rig-up-cost').innerText = state.businesses.rig.upgradeCost.toLocaleString();
 
-            document.getElementById('stock-fruit-owned').innerText = `Vlastníš: ${state.market.fruit.owned} ks`;
-            document.getElementById('crypto-cyber-owned').innerText = `Vlastníš: ${state.market.cyber.owned} CBC`;
-            
-            let remaining = 15 - Math.floor((Date.now() - state.lastSpinTime) / 1000);
-            document.getElementById('casino-timer').innerText = remaining > 0 ? `Znovu za: ${remaining}s` : "Kolo připraveno.";
+            document.getElementById('stock-fruit-owned').innerText = `Máš: ${state.market.fruit.owned} ks`;
+            document.getElementById('crypto-cyber-owned').innerText = `Máš: ${state.market.cyber.owned} CBC`;
         }
 
-        // Hlavní loop hry
-        let saveCounter = 0;
         setInterval(() => {
             let cafeInc = state.businesses.cafe.count * state.businesses.cafe.baseIncome * state.businesses.cafe.level;
             let bankInc = state.businesses.bank.count * state.businesses.bank.baseIncome * state.businesses.bank.level;
@@ -693,17 +649,11 @@
             state.market.cyber.owned = Number((state.market.cyber.owned + rigMining).toFixed(1));
 
             updateUI();
-            
-            // Odesílání na live cloud server každých 5 sekund, abychom neproklikali datové limity
-            saveCounter++;
-            if(saveCounter >= 5) {
-                save();
-                saveCounter = 0;
-            }
+            localStorage.setItem('bizOfflineSave', JSON.stringify(state));
         }, 1000);
 
         setInterval(updateMarket, 3000);
-        function resetGame() { if (confirm("Smazat?")) { localStorage.clear(); location.reload(); } }
+        function resetGame() { if (confirm("Smazat místní data?")) { localStorage.clear(); location.reload(); } }
 
         initProfile();
     </script>
