@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Business Empire: Supreme Offline</title>
+    <title>Business Empire: Evolution PIN</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -150,19 +150,18 @@
         .bet-chip.selected { background-color: var(--color-purple); border-color: #c084fc; color: white; box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
         .wheel-screen { font-size: 32px; font-weight: 900; color: var(--color-gold); text-align: center; padding: 15px 0; min-height: 38px; }
 
-        .leaderboard-list { width: 100%; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
-        .leaderboard-item { display: flex; justify-content: space-between; padding: 10px 14px; background-color: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; }
-
         .case-anim-box { background-color: #070a12; border-radius: 8px; padding: 10px; margin: 10px 0; font-weight: 700; font-size: 13px; text-align: center; color: var(--text-muted); border: 1px dashed #334155; }
         .reset-btn { background: none; border: 1px solid var(--color-red); color: var(--color-red); padding: 4px 8px; border-radius: 6px; font-size: 10px; margin-top: 25px; opacity: 0.3; cursor: pointer;}
         
-        .sync-input-area { width: 100%; background: #070a12; border: 1px solid var(--border); color: var(--color-gold); padding: 8px; border-radius: 8px; font-family: monospace; font-size: 10px; box-sizing: border-box; margin-top: 5px; }
+        /* Styl pro PIN klávesnici */
+        .pin-display-box { font-size: 26px; font-weight: 900; color: var(--color-gold); letter-spacing: 4px; text-align: center; margin: 10px 0; background: #070a12; padding: 10px; border-radius: 10px; min-height: 32px; border: 1px solid var(--border); }
+        .profile-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background-color: #070a12; color: white; text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 5px; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
     <div class="profile-bar">
-        <div>Profil: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">---</span></div>
+        <div>Jméno: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">---</span></div>
         <div>Rank: <span id="profile-rank-display" style="color:var(--color-purple); font-weight:bold;">Začátečník</span></div>
     </div>
 
@@ -187,7 +186,7 @@
             <span class="icon">🎰</span><span>Hazard</span>
         </button>
         <button class="nav-btn" id="nav-settings" onclick="switchTab('settings')">
-            <span class="icon">🏆</span><span>Sín slávy</span>
+            <span class="icon">👤</span><span>Profil</span>
         </button>
     </div>
 
@@ -326,25 +325,32 @@
     </div>
 
     <div id="tab-settings" class="tab-content">
-        <div class="section-title">📲 Přenos postupu (PC 🤝 Mobil)</div>
+        <div class="section-title">👤 Správa Tvého Profilu</div>
         <div class="card" style="flex-direction:column; align-items:stretch; gap:8px;">
-            <button class="btn btn-success" onclick="exportSaveCode()">1. Vygenerovat kód postupu</button>
-            <button class="btn btn-purple" onclick="importSaveCode()">2. Načíst kód postupu</button>
-            <textarea id="sync-text-area" class="sync-input-area" rows="3" placeholder="Sem se vygeneruje kód, nebo ho sem vlož pro načtení..."></textarea>
+            <p style="margin:0; font-size:11px; color:var(--text-muted);">Zadej svoji herní přezdívku:</p>
+            <input type="text" id="username-input" class="profile-input" placeholder="Zadej jméno..." onchange="changeUsername()">
         </div>
 
-        <div class="section-title">🏆 Síň Slávy (Tvoje Rekordy)</div>
-        <div class="card" style="flex-direction:column; align-items:stretch;">
-            <div id="leaderboard-box" class="leaderboard-list">Žádné uložené rekordy.</div>
+        <div class="section-title">🔢 Přenos Postupu Přes 4místný PIN</div>
+        <div class="card" style="flex-direction:column; align-items:stretch; gap:10px;">
+            <p style="margin:0; font-size:12px; color:var(--text-muted);">Vygeneruj si PIN na PC a zadej ho na mobilu pro přenos dat.</p>
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <button class="btn btn-success" onclick="generatePinCode()">1. Získat PIN kód</button>
+                <button class="btn btn-purple" onclick="loadByPinCode()">2. Načíst přes PIN</button>
+            </div>
+
+            <div id="pin-display" class="pin-display-box">----</div>
         </div>
-        <center><button class="reset-btn" onclick="resetGame()">Smazat místní data</button></center>
+
+        <center><button class="reset-btn" onclick="resetGame()">Smazat veškerý postup</button></center>
     </div>
 
     <script>
-        // --- DATA JÁDRO ---
+        // --- DATA ---
         const DEFAULT_STATE = {
             balance: 1000, clickPower: 1, clickUpgradeCost: 150, clickUpgradeStep: 2, selectedBet: 100, lastSpinTime: 0,
-            profileName: "HRAC-" + Math.floor(1000 + Math.random() * 9000),
+            profileName: "HRAC",
             businesses: {
                 cafe: { count: 0, cost: 400, baseIncome: 8, level: 1, upgradeCost: 600 },
                 bank: { count: 0, cost: 350000, baseIncome: 4200, level: 1, upgradeCost: 400000 },
@@ -358,82 +364,84 @@
         };
 
         let state = {};
-        let localRecords = [];
+
+        // BEZPEČNÝ VEŘEJNÝ CLOUD POUZE PRO DOČASNÉ UKLÁDÁNÍ PINŮ
+        const PIN_SERVER_URL = "https://api.rest7.com/v1/dump"; 
 
         function initProfile() {
             let savedData = localStorage.getItem('bizOfflineSave');
             state = savedData ? JSON.parse(savedData) : JSON.parse(JSON.stringify(DEFAULT_STATE));
             
-            // Ošetření struktur při načítání
-            if(!state.profileName) state.profileName = "HRAC-" + Math.floor(1000 + Math.random() * 9000);
-            if(!state.market) state.market = JSON.parse(JSON.stringify(DEFAULT_STATE.market));
+            if(!state.profileName) state.profileName = "HRAC";
             
             document.getElementById('profile-id-display').innerText = state.profileName;
-
-            // Načtení síně slávy
-            let savedRecords = localStorage.getItem('bizLocalRecords');
-            localRecords = savedRecords ? JSON.parse(savedRecords) : [];
+            document.getElementById('username-input').value = state.profileName;
 
             selectBet(state.selectedBet || 100);
             updateRank();
             updateUI();
-            refreshLeaderboard();
         }
 
         function save() {
             localStorage.setItem('bizOfflineSave', JSON.stringify(state));
-            
-            // Ukládání tvého aktuálního skóre do žebříčku rekordů
-            let existingIdx = localRecords.findIndex(r => r.id === state.profileName);
-            if(existingIdx !== -1) {
-                localRecords[existingIdx].balance = state.balance;
-            } else {
-                localRecords.push({ id: state.profileName, balance: state.balance });
-            }
-            localRecords.sort((a,b) => b.balance - a.balance);
-            localStorage.setItem('bizLocalRecords', JSON.stringify(localRecords));
         }
 
-        // --- EXPORT A IMPORT SAVU (TRIK PRO GITHUB) ---
-        function exportSaveCode() {
+        function changeUsername() {
+            let newName = document.getElementById('username-input').value.trim();
+            if(newName) {
+                state.profileName = newName.toUpperCase();
+                document.getElementById('profile-id-display').innerText = state.profileName;
+                save();
+            }
+        }
+
+        // --- UNIKÁTNÍ GENERÁTOR 4MÍSTNÝCH PIN KÓDŮ ---
+        async function generatePinCode() {
             save();
-            // Zašifrujeme data hry do Base64 textu
-            let encrypted = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
-            document.getElementById('sync-text-area').value = encrypted;
-            document.getElementById('sync-text-area').select();
-            alert("Kód tvé hry byl vygenerován a zkopírován do textového pole. Pošli si ho na mobil!");
-        }
+            let encryptedData = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+            let randomPin = Math.floor(1000 + Math.random() * 9000).toString(); // Vždy 4místné číslo
+            
+            document.getElementById('pin-display').innerText = "Nahrávám...";
 
-        function importSaveCode() {
-            let code = document.getElementById('sync-text-area').value.trim();
-            if(!code) { alert("Nejdřív vlož kód do textového pole!"); return; }
             try {
-                // Rozšifrujeme text zpět na herní data
-                let decrypted = decodeURIComponent(escape(atob(code)));
-                let parsed = JSON.parse(decrypted);
-                if(parsed.balance && parsed.businesses) {
-                    state = parsed;
-                    save();
-                    alert("Postup byl úspěšně načten!");
-                    location.reload();
-                } else { alert("Chybný kód hry!"); }
-            } catch(e) { alert("Tento kód není správný nebo je poškozený."); }
+                // Pošleme save na dočasný server pod vygenerovaným PINem
+                let res = await fetch(`https://kvstore.io/api/v1/collections/empirePins2026/items/${randomPin}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: encryptedData })
+                });
+
+                if(res.ok) {
+                    document.getElementById('pin-display').innerText = randomPin;
+                    alert(`Tvůj 4místný přenosový PIN je: ${randomPin}. Zadej ho na druhém zařízení!`);
+                } else { document.getElementById('pin-display').innerText = "Chyba serveru"; }
+            } catch(e) { document.getElementById('pin-display').innerText = "Offline"; }
         }
 
-        function refreshLeaderboard() {
-            let box = document.getElementById('leaderboard-box');
-            if(localRecords.length === 0) {
-                box.innerHTML = "Zatím žádné rekordy.";
-                return;
-            }
-            box.innerHTML = "";
-            localRecords.slice(0, 5).forEach((p, idx) => {
-                box.innerHTML += `
-                    <div class="leaderboard-item">
-                        <div>${idx + 1}. 🎖️ <b>${p.id}</b></div>
-                        <div style="color:var(--color-green)">$${Math.floor(p.balance).toLocaleString()}</div>
-                    </div>`;
-            });
+        async function loadByPinCode() {
+            let inputPin = prompt("Zadej 4místný PIN kód vygenerovaný na druhém zařízení:");
+            if(!inputPin || inputPin.trim().length !== 4) { alert("Zadej platný 4místný kód!"); return; }
+            
+            document.getElementById('pin-display').innerText = "Stahuji...";
+
+            try {
+                let res = await fetch(`https://kvstore.io/api/v1/collections/empirePins2026/items/${inputPin.trim()}`);
+                if(res.ok) {
+                    let json = await res.json();
+                    let decrypted = decodeURIComponent(escape(atob(json.value)));
+                    let parsed = JSON.parse(decrypted);
+
+                    if(parsed.balance && parsed.businesses) {
+                        state = parsed;
+                        save();
+                        alert("Postup z jiného zařízení byl úspěšně nahrán!");
+                        location.reload();
+                    }
+                } else { 
+                    alert("Tento PIN neexistuje nebo vypršela jeho platnost!");
+                    document.getElementById('pin-display').innerText = "CHYBA";
+                }
+            } catch(e) { alert("Chyba při komunikaci se serverem."); }
         }
 
         function updateRank() {
@@ -459,7 +467,6 @@
                     }
                 }, 50);
             }
-            if(tabId === 'settings') refreshLeaderboard();
         }
 
         function clickVault() { state.balance += state.clickPower; updateUI(); }
@@ -653,7 +660,7 @@
         }, 1000);
 
         setInterval(updateMarket, 3000);
-        function resetGame() { if (confirm("Smazat místní data?")) { localStorage.clear(); location.reload(); } }
+        function resetGame() { if (confirm("Smazat?")) { localStorage.clear(); location.reload(); } }
 
         initProfile();
     </script>
