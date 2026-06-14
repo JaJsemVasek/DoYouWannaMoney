@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Business Empire: Infinite Pro</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BizEmpire">
+
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: #131a26;
+            --border: #222f43;
+            --text-main: #ffffff;
+            --text-muted: #64748b;
+            --color-green: #10b981;
+            --color-red: #ef4444;
+            --color-blue: #3b82f6;
+            --color-gold: #f59e0b;
+            --color-purple: #8b5cf6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-user-select: none;
+            user-select: none;
+            padding-bottom: 90px; /* Prostor pro spodní menu */
+            box-sizing: border-box;
+        }
+
+        /* FIX PRO iPHONE NOTCH (VÝŘEZ) */
+        @supports (padding-top: env(safe-area-inset-top)) {
+            body {
+                padding-top: calc(env(safe-area-inset-top) + 10px);
+            }
+        }
+
+        /* Horní lišta profilu */
+        .profile-bar {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 8px 14px;
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Minimalistický Hlavní HUD */
+        .main-hud {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0d1520 100%);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px;
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            transition: background 0.2s ease;
+        }
+
+        .balance {
+            font-size: 34px;
+            font-weight: 900;
+            color: var(--color-green);
+            margin: 4px 0;
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 8px;
+        }
+
+        .stats-grid span { color: var(--text-main); font-weight: 700; display: block; margin-top: 2px;}
+
+        /* ZÁLOŽKY - SPODNÍ NAVIGAČNÍ LIŠTA (Style: Instagram/App Store) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(19, 26, 38, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 10px 0;
+            padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+            z-index: 1000;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-btn .icon {
+            font-size: 20px;
+        }
+
+        .nav-btn.active {
+            color: var(--color-blue);
+        }
+
+        /* Obsah karet a sekcí */
+        .tab-content {
+            display: none;
+            width: 100%;
+            max-width: 420px;
+            flex-direction: column;
+            gap: 12px;
+            box-sizing: border-box;
+        }
+
+        .tab-content.active { display: flex; }
+
+        .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            margin: 8px 0 2px 4px;
+            font-weight: 800;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .info-block h3 { margin: 0 0 4px 0; font-size: 15px; }
+        .info-block p { margin: 0; font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+        .market-right { display: flex; align-items: center; }
+
+        /* Tlačítka */
+        .btn {
+            background-color: var(--color-blue);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-success { background-color: var(--color-green); }
+        .btn-danger { background-color: var(--color-red); }
+        .btn-purple { background-color: var(--color-purple); }
+        .btn-gold { background-color: var(--color-gold); color: #000; }
+        .btn-small { padding: 4px 8px; font-size: 10px; border-radius: 6px; background-color: #334155;}
+
+        /* Klikací zóna */
+        .clicker-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .click-vault-btn {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #2563eb 0%, #1d4ed8 100%);
+            border: 4px solid #3b82f6;
+            font-size: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+            margin-bottom: 20px;
+        }
+        .click-vault-btn:active { transform: scale(0.92); }
+
+        /* KASINO: Volba sázek */
+        .casino-box {
+            background: linear-gradient(135deg, #2e1065 0%, #0f052d 100%);
+            border: 1px solid var(--color-purple);
+            border-radius: 20px;
+            padding: 16px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .bet-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin: 12px 0;
+        }
+
+        .bet-chip {
+            background-color: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 2px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .bet-chip.selected {
+            background-color: var(--color-purple);
+            border-color: #c084fc;
+            color: white;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+        }
+
+        .wheel-screen {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--color-gold);
+            text-align: center;
+            padding: 15px 0;
+            min-height: 38px;
+        }
+
+        .case-anim-box {
+            background-color: #070a12;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-weight: 700;
+            font-size: 13px;
+            text-align: center;
+            color: var(--text-muted);
+            border: 1px dashed #334155;
+        }
+
+        .reset-btn {
+            background: none;
+            border: 1px solid var(--color-red);
+            color: var(--color-red);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            margin-top: 25px;
+            opacity: 0.3;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PROFILOVÁ LIŠTA -->
+    <div class="profile-bar">
+        <div>ID: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">---</span></div>
+        <div>Rank: <span id="profile-rank-display" style="color:var(--color-purple); font-weight:bold;">Začátečník</span></div>
+        <button class="btn btn-small" onclick="switchProfilePrompt()">Načíst</button>
+    </div>
+
+    <!-- HORNÍ HUD PANEL -->
+    <div id="main-hud-panel" class="main-hud">
+        <div class="section-title" style="margin:0;">Finanční Impérium</div>
+        <div id="balance" class="balance">$1,000</div>
+        <div class="stats-grid">
+            <div>Příjem/s<span id="hud-pasive" style="color: var(--color-green);">$0</span></div>
+            <div>Kliknutí<span id="hud-click-power" style="color: var(--color-blue);">$1</span></div>
+            <div>Krypto<span id="hud-crypto-owned" style="color: var(--color-gold);">0 CBC</span></div>
+        </div>
+    </div>
+
+    <!-- ================= SPODNÍ MENU NAVIGACE ================= -->
+    <div class="bottom-nav">
+        <button class="nav-btn active" id="nav-clicker" onclick="switchTab('clicker')">
+            <span class="icon">🖱️</span><span>Klik / Trh</span>
+        </button>
+        <button class="nav-btn" id="nav-business" onclick="switchTab('business')">
+            <span class="icon">🏢</span><span>Byznys</span>
+        </button>
+        <button class="nav-btn" id="nav-gambling" onclick="switchTab('gambling')">
+            <span class="icon">🎰</span><span>Hazard</span>
+        </button>
+        <button class="nav-btn" id="nav-settings" onclick="switchTab('settings')">
+            <span class="icon">⚙️</span><span>Nastavení</span>
+        </button>
+    </div>
+
+    <!-- ================= ZÁLOŽKA 1: KLIKER & BURZA ================= -->
+    <div id="tab-clicker" class="tab-content active">
+        <div class="clicker-wrap">
+            <div class="click-vault-btn" onclick="clickVault()">💎</div>
+            <div class="card" style="width:100%;">
+                <div class="info-block">
+                    <h3>Těžební AI Core</h3>
+                    <p>Upgrade zvýší sílu kliku o <span id="click-next-gain" style="color:var(--color-blue); font-weight:bold;">+2</span></p>
+                    <p style="color: var(--color-gold); font-weight:bold; margin-top:2px;" id="click-cost">Cena: $150</p>
+                </div>
+                <button class="btn" onclick="buyClickUpgrade()">Upgradovat</button>
+            </div>
+        </div>
+
+        <div class="section-title">Finanční trhy</div>
+        <div class="card">
+            <div class="info-block">
+                <h3>🍏 Fruit Inc. (Akcie)</h3>
+                <p>Cena za ks: <span id="stock-fruit-price" style="font-weight:bold;">$100</span></p>
+                <p id="stock-fruit-owned">Vlastníš: 0 ks</p>
+            </div>
+            <div class="market-right">
+                <div class="chart-container"><canvas id="chart-fruit" width="70" height="35"></canvas></div>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <button class="btn btn-success" style="padding:4px 8px; font-size:10px;" onclick="buyAsset('fruit')">BUY</button>
+                    <button class="btn btn-danger" style="padding:4px 8px; font-size:10px;" onclick="sellAsset('fruit')">SELL</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="info-block">
+                <h3>🪙 CyberCoin (CBC)</h3>
+                <p>Cena za ks: <span id="crypto-cyber-price" style="font-weight:bold; color:var(--color-gold);">$2,500</span></p>
+                <p id="crypto-cyber-owned">Vlastníš: 0 CBC</p>
+            </div>
+            <div class="market-right">
+                <div class="chart-container"><canvas id="chart-cyber" width="70" height="35"></canvas></div>
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                    <button class="btn btn-success" style="padding:4px 8px; font-size:10px;" onclick="buyAsset('cyber')">BUY</button>
+                    <button class="btn btn-danger" style="padding:4px 8px; font-size:10px;" onclick="sellAsset('cyber')">SELL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= ZÁLOŽKA 2: BYZNYS & UPGRADY ================= -->
+    <div id="tab-business" class="tab-content">
+        <div class="section-title">Pasivní Výdělek</div>
+        
+        <div class="card">
+            <div class="info-block">
+                <h3>☕ Pizzerie</h3>
+                <p id="biz-cafe-info">Pobočky: 0 | Pobočka Lev: 1</p>
+                <p style="color: var(--color-green);" id="biz-cafe-payout">Zisk: +$0/s</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+                <button class="btn btn-success" style="font-size:10px; padding:6px 10px;" onclick="buyBusiness('cafe')">Koupit ($<span id="biz-cafe-cost">400</span>)</button>
+                <button class="btn btn-purple" style="font-size:10px; padding:6px 10px;" onclick="upgradeBusiness('cafe')">Rozšířit ($<span id="biz-cafe-up-cost">600</span>)</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="info-block">
+                <h3>🏦 Bankovní Holding</h3>
+                <p id="biz-bank-info">Pobočky: 0 | Pobočka Lev: 1</p>
+                <p style="color: var(--color-green);" id="biz-bank-payout">Zisk: +$0/s</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+                <button class="btn btn-success" style="font-size:10px; padding:6px 10px;" onclick="buyBusiness('bank')">Koupit ($<span id="biz-bank-cost">350k</span>)</button>
+                <button class="btn btn-purple" style="font-size:10px; padding:6px 10px;" onclick="upgradeBusiness('bank')">Rozšířit ($<span id="biz-bank-up-cost">400k</span>)</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="info-block">
+                <h3>🏎️ Volt Motors (Automobilka)</h3>
+                <p id="biz-car-info">Továrny: 0 | Pobočka Lev: 1</p>
+                <p style="color: var(--color-green);" id="biz-car-payout">Zisk: +$0/s</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+                <button class="btn btn-success" style="font-size:10px; padding:6px 10px;" onclick="buyBusiness('car')">Koupit ($<span id="biz-car-cost">2M</span>)</button>
+                <button class="btn btn-purple" style="font-size:10px; padding:6px 10px;" onclick="upgradeBusiness('car')">Rozšířit ($<span id="biz-car-up-cost">3.5M</span>)</button>
+            </div>
+        </div>
+
+        <div class="section-title">Kryptoměnová Těžba</div>
+        <div class="card">
+            <div class="info-block">
+                <h3>⚡ Těžební Sál (Rigy)</h3>
+                <p id="biz-rig-info">Rigy: 0 | Rig Lev: 1</p>
+                <p style="color: var(--color-gold);" id="biz-rig-payout">Těžba: +0 CBC/s</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+                <button class="btn btn-purple" style="font-size:10px; padding:6px 10px;" onclick="buyBusiness('rig')">Koupit ($<span id="biz-rig-cost">3,500</span>)</button>
+                <button class="btn btn-purple" style="font-size:10px; padding:6px 10px;" onclick="upgradeBusiness('rig')">Zrychlit ($<span id="biz-rig-up-cost">5,000</span>)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= ZÁLOŽKA 3: HAZARD (KOLO + BEDNY SLOUČENY) ================= -->
+    <div id="tab-gambling" class="tab-content">
+        <div class="section-title">Kolo Štěstí</div>
+        <div class="casino-box">
+            <p style="font-size:11px; color:var(--text-muted); margin:0 0 8px 0; text-align:center;">Zvol vklad žetonu:</p>
+            <div class="bet-grid">
+                <div id="bet-100" class="bet-chip selected" onclick="selectBet(100)">$100</div>
+                <div id="bet-500" class="bet-chip" onclick="selectBet(500)">$500</div>
+                <div id="bet-2500" class="bet-chip" onclick="selectBet(2500)">$2,500</div>
+                <div id="bet-10000" class="bet-chip" onclick="selectBet(10000)">$10,000</div>
+            </div>
+            <div id="wheel-result" class="wheel-screen">READY</div>
+            <button id="spin-btn" class="btn btn-purple" style="width:100%; padding:12px; font-size:15px;" onclick="spinWheel()">Roztočit Kolo</button>
+            <p id="casino-timer" style="font-size:10px; color:var(--text-muted); margin-top:6px; text-align:center;"></p>
+        </div>
+
+        <div class="section-title">Otevírání beden (Case Opening)</div>
+        <div class="card" style="flex-direction:column; align-items:stretch; gap:10px;">
+            <div style="display:flex; justify-content:between; align-items:center;">
+                <div>
+                    <h4 style="margin:0; color:var(--color-gold);">🟫 Bronzový Kufřík</h4>
+                    <p style="font-size:11px; color:var(--text-muted);">Drop: až $2,500</p>
+                </div>
+                <button class="btn btn-small" onclick="openCase('bronze', 500)">Otevřít za $500</button>
+            </div>
+            <div id="case-anim-bronze" class="case-anim-box">ZAVŘENO</div>
+        </div>
+
+        <div class="card" style="flex-direction:column; align-items:stretch; gap:10px;">
+            <div style="display:flex; justify-content:between; align-items:center;">
+                <div>
+                    <h4 style="margin:0; color:#cbd5e1;">🟩 Smaragdový Kufřík</h4>
+                    <p style="font-size:11px; color:var(--text-muted);">Drop: až $400,000</p>
+                </div>
+                <button class="btn btn-small" onclick="openCase('emerald', 50000)">Otevřít za $50k</button>
+            </div>
+            <div id="case-anim-emerald" class="case-anim-box">ZAVŘENO</div>
+        </div>
+    </div>
+
+    <!-- ================= ZÁLOŽKA 4: NASTAVENÍ / SPRÁVA ================= -->
+    <div id="tab-settings" class="tab-content">
+        <div class="section-title">Systém a Profily</div>
+        <div class="card" style="flex-direction:column; align-items:flex-start; gap:10px;">
+            <p style="margin:0; font-size:12px;">Aktuální ID profilu slouží k ukládání postupu v paměti telefonu. Můžeš ho přepsat a načíst si jiný účet.</p>
+            <button class="btn" style="width:100%;" onclick="switchProfilePrompt()">Načíst jiný účet / ID</button>
+        </div>
+        <center><button class="reset-btn" onclick="resetGame()">Kompletně Smazat Všechna Data</button></center>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const DEFAULT_STATE = {
+            balance: 1000,
+            clickPower: 1,
+            clickUpgradeCost: 150,
+            clickUpgradeStep: 2,
+            selectedBet: 100,
+            lastSpinTime: 0,
+            businesses: {
+                cafe: { count: 0, cost: 400, baseIncome: 8, level: 1, upgradeCost: 600 },
+                rig: { count: 0, cost: 3500, baseIncome: 0.1, level: 1, upgradeCost: 5000 }, 
+                bank: { count: 0, cost: 350000, baseIncome: 4200, level: 1, upgradeCost: 400000 },
+                car: { count: 0, cost: 2000000, baseIncome: 24000, level: 1, upgradeCost: 3500000 }
+            },
+            market: {
+                fruit: { price: 100, owned: 0, basePrice: 100, type: 'stock', history: [100,100,100,100,100,100,100,100] },
+                cyber: { price: 2500, owned: 0, basePrice: 2500, type: 'crypto', history: [2500,2500,2500,2500,2500,2500,2500,2500] }
+            }
+        };
+
+        let currentProfileId = "";
+        let state = {};
+
+        function initProfile() {
+            let activeId = localStorage.getItem('bizActiveProfileId');
+            if (!activeId) {
+                activeId = "HRAC-" + Math.floor(1000 + Math.random() * 9000).toString(16).toUpperCase();
+                localStorage.setItem('bizActiveProfileId', activeId);
+            }
+            currentProfileId = activeId;
+            document.getElementById('profile-id-display').innerText = currentProfileId;
+            
+            let savedData = localStorage.getItem('bizProfile_' + currentProfileId);
+            if (savedData) {
+                state = JSON.parse(savedData);
+                // Kontrola struktur pro aktualizovaný byznys
+                if(!state.businesses.car) state.businesses.car = JSON.parse(JSON.stringify(DEFAULT_STATE.businesses.car));
+                for(let id in DEFAULT_STATE.businesses) {
+                    if(!state.businesses[id].level) state.businesses[id].level = 1;
+                }
+            } else {
+                state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+            }
+            selectBet(state.selectedBet || 100);
+            updateRank();
+        }
+
+        function switchProfilePrompt() {
+            let targetId = prompt("Zadej stávající ID profilu pro načtení:", currentProfileId);
+            if (targetId && targetId.trim() !== "") {
+                targetId = targetId.trim().toUpperCase();
+                localStorage.setItem('bizActiveProfileId', targetId);
+                location.reload();
+            }
+        }
+
+        function updateRank() {
+            let rank = "Začátečník 💼";
+            if (state.balance > 25000000) rank = "Finanční Magnát 👑";
+            else if (state.balance > 1000000) rank = "Milionář 💰";
+            else if (state.balance > 100000) rank = "Investor 📈";
+            document.getElementById('profile-rank-display').innerText = rank;
+        }
+
+        // --- PREPÍNANÍ PANELŮ PŘES BOTTOM NAV ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            // Aktivace tlačítka v menu
+            document.getElementById(`nav-${tabId}`).classList.add('active');
+            // Zobrazení obsahu
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            if(tabId === 'clicker') {
+                for (let id in state.market) {
+                    let asset = state.market[id];
+                    let isUp = asset.history[asset.history.length-1] >= asset.history[asset.history.length-2];
+                    drawChart(`chart-${id}`, asset.history, isUp);
+                }
+            }
+        }
+
+        function clickVault() {
+            triggerHudFlash(true);
+            state.balance += state.clickPower;
+            updateUI();
+        }
+
+        function buyClickUpgrade() {
+            if (state.balance >= state.clickUpgradeCost) {
+                state.balance -= state.clickUpgradeCost;
+                state.clickPower += state.clickUpgradeStep;
+                state.clickUpgradeStep += 2;
+                state.clickUpgradeCost = Math.floor(state.clickUpgradeCost * 1.8);
+                updateUI();
+                save();
+            } else { alert("Málo peněz!"); }
+        }
+
+        function buyBusiness(id) {
+            let biz = state.businesses[id];
+            if (state.balance >= biz.cost) {
+                state.balance -= biz.cost;
+                biz.count++;
+                biz.cost = Math.floor(biz.cost * 1.25);
+                updateUI();
+                save();
+            } else { alert("Nedostatek financí!"); }
+        }
+
+        function upgradeBusiness(id) {
+            let biz = state.businesses[id];
+            if (state.balance >= biz.upgradeCost) {
+                state.balance -= biz.upgradeCost;
+                biz.level++;
+                biz.upgradeCost = Math.floor(biz.upgradeCost * 1.6);
+                updateUI();
+                save();
+            } else { alert("Nemáš dost peněz na rozšíření pobočky!"); }
+        }
+
+        // --- BURZA ---
+        function buyAsset(id) {
+            let asset = state.market[id];
+            if (state.balance >= asset.price) {
+                state.balance -= asset.price;
+                asset.owned = Number((asset.owned + 1).toFixed(1));
+                updateUI();
+                save();
+            } else { alert("Málo peněz!"); }
+        }
+
+        function sellAsset(id) {
+            let asset = state.market[id];
+            if (asset.owned >= (id === 'cyber' ? 0.1 : 1)) {
+                state.balance += asset.price;
+                asset.owned = Number((asset.owned - (id === 'cyber' ? 1 : 1)).toFixed(1));
+                updateUI();
+                save();
+            } else { alert("Nemáš co k prodeji!"); }
+        }
+
+        // --- KOLO ŠTĚSTÍ (ZÁLOŽKA HAZARD) ---
+        function selectBet(amount) {
+            state.selectedBet = amount;
+            document.querySelectorAll('.bet-chip').forEach(el => el.classList.remove('selected'));
+            let activeEl = document.getElementById(`bet-${amount}`);
+            if (activeEl) activeEl.classList.add('selected');
+            save();
+        }
+
+        function spinWheel() {
+            let now = Date.now();
+            if (now - state.lastSpinTime < 15000) {
+                alert("Kolo štěstí odpočívá. Zkus to za chvíli!");
+                return;
+            }
+            
+            let bet = state.selectedBet;
+            if (state.balance < bet) {
+                alert("Nedostatek financí na vsazení žetonu!");
+                return;
+            }
+
+            state.lastSpinTime = now;
+            state.balance -= bet;
+            updateUI();
+            
+            let btn = document.getElementById('spin-btn');
+            let resDisplay = document.getElementById('wheel-result');
+            btn.disabled = true;
+            
+            let counter = 0;
+            let anim = setInterval(() => {
+                resDisplay.innerText = (Math.random() * 4).toFixed(1) + "x";
+                counter++;
+                if (counter > 10) {
+                    clearInterval(anim);
+                    
+                    let mults = [0, 0.2, 0.5, 1.5, 3.0]; 
+                    let multiplier = mults[Math.floor(Math.random() * mults.length)];
+                    let winAmount = Math.floor(bet * multiplier);
+                    state.balance += winAmount;
+
+                    if (multiplier > 1) {
+                        resDisplay.innerHTML = `<span style="color:var(--color-green)">${multiplier}x (+$${winAmount.toLocaleString()})</span>`;
+                        triggerHudFlash(true);
+                    } else {
+                        resDisplay.innerHTML = `<span style="color:var(--color-red)">${multiplier}x</span>`;
+                    }
+                    
+                    btn.disabled = false;
+                    updateRank();
+                    updateUI();
+                    save();
+                }
+            }, 90);
+        }
+
+        // --- BEDNY ---
+        const CASES = {
+            bronze: [{name:"🥫 Smetí",v:10,c:"#64748b"}, {name:"☕ Espresso",v:600,c:"#3b82f6"}, {name:"💎 Safír",v:2400,c:"#fbbf24"}],
+            emerald: [{name:"📉 NFT",v:50,c:"#64748b"}, {name:"⚙️ GPU Rig",v:24000,c:"#a855f7"}, {name:"👑 Nůž ★",v:380000,c:"#fbbf24"}]
+        };
+
+        function openCase(tier, cost) {
+            if (state.balance < cost) { alert("Nemáš dost peněz!"); return; }
+            state.balance -= cost; updateUI();
+            let box = document.getElementById(`case-anim-${tier}`);
+            let pool = CASES[tier];
+            let ticks = 0;
+            let loop = setInterval(() => {
+                box.innerHTML = pool[Math.floor(Math.random() * pool.length)].name;
+                ticks++;
+                if(ticks > 10) {
+                    clearInterval(loop);
+                    let roll = Math.random();
+                    let final = roll < 0.55 ? pool[0] : (roll < 0.94 ? pool[1] : pool[2]);
+                    state.balance += final.v;
+                    box.innerHTML = `⭐ <span style="color:${final.c}">${final.name} (+$${final.v.toLocaleString()})</span>`;
+                    triggerHudFlash(true); updateRank(); updateUI(); save();
+                }
+            }, 90);
+        }
+
+        function triggerHudFlash(pos) {
+            let h = document.getElementById('main-hud-panel');
+            h.style.background = pos ? "linear-gradient(135deg, #064e3b 0%, #0d1520 100%)" : "linear-gradient(135deg, #4c0519 0%, #0d1520 100%)";
+            setTimeout(() => h.style.background = "linear-gradient(135deg, #1e1b4b 0%, #0d1520 100%)", 250);
+        }
+
+        function drawChart(id, hist, up) {
+            let c = document.getElementById(id); if (!c) return;
+            let ctx = c.getContext('2d'); ctx.clearRect(0, 0, c.width, c.height);
+            ctx.beginPath(); ctx.strokeStyle = up ? '#10b981' : '#ef4444'; ctx.lineWidth = 2;
+            let min = Math.min(...hist), max = Math.max(...hist), r = max - min === 0 ? 1 : max - min;
+            for (let i = 0; i < hist.length; i++) {
+                let x = (i / (hist.length - 1)) * c.width;
+                let y = c.height - ((hist[i] - min) / r) * c.height;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+
+        function updateMarket() {
+            for (let id in state.market) {
+                let a = state.market[id];
+                let v = a.type === 'crypto' ? 0.18 : 0.04;
+                let old = a.price;
+                a.price = Math.max(5, Math.floor(a.price * (1 + (Math.random() * 2 - 1) * v) + (a.basePrice - a.price) * 0.015));
+                a.history.push(a.price); if (a.history.length > 8) a.history.shift();
+                if(document.getElementById('tab-clicker').classList.contains('active')) drawChart(`chart-${id}`, a.history, a.price >= old);
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('balance').innerText = '$' + Math.floor(state.balance).toLocaleString();
+            document.getElementById('hud-crypto-owned').innerText = `${state.market.cyber.owned.toFixed(1)} CBC`;
+            document.getElementById('hud-click-power').innerText = '$' + state.clickPower;
+            document.getElementById('click-cost').innerText = `Cena: $${state.clickUpgradeCost.toLocaleString()}`;
+            document.getElementById('click-next-gain').innerText = `+${state.clickUpgradeStep}`;
+
+            // Výpočty zisků v závislosti na levelu rozšíření
+            let cafeInc = state.businesses.cafe.count * state.businesses.cafe.baseIncome * state.businesses.cafe.level;
+            let bankInc = state.businesses.bank.count * state.businesses.bank.baseIncome * state.businesses.bank.level;
+            let carInc = state.businesses.car.count * state.businesses.car.baseIncome * state.businesses.car.level;
+            let total = cafeInc + bankInc + carInc;
+
+            document.getElementById('hud-pasive').innerText = `+$${total.toLocaleString()}`;
+
+            // Aktualizace textů v kartách
+            document.getElementById('biz-cafe-info').innerText = `Pobočky: ${state.businesses.cafe.count} | Lev: ${state.businesses.cafe.level}`;
+            document.getElementById('biz-cafe-payout').innerText = `Zisk: +$${cafeInc.toLocaleString()}/s`;
+            document.getElementById('biz-cafe-cost').innerText = state.businesses.cafe.cost.toLocaleString();
+            document.getElementById('biz-cafe-up-cost').innerText = state.businesses.cafe.upgradeCost.toLocaleString();
+
+            document.getElementById('biz-bank-info').innerText = `Holdingy: ${state.businesses.bank.count} | Lev: ${state.businesses.bank.level}`;
+            document.getElementById('biz-bank-payout').innerText = `Zisk: +$${bankInc.toLocaleString()}/s`;
+            document.getElementById('biz-bank-cost').innerText = state.businesses.bank.cost.toLocaleString();
+            document.getElementById('biz-bank-up-cost').innerText = state.businesses.bank.upgradeCost.toLocaleString();
+
+            document.getElementById('biz-car-info').innerText = `Továrny: ${state.businesses.car.count} | Lev: ${state.businesses.car.level}`;
+            document.getElementById('biz-car-payout').innerText = `Zisk: +$${carInc.toLocaleString()}/s`;
+            document.getElementById('biz-car-cost').innerText = state.businesses.car.cost.toLocaleString();
+            document.getElementById('biz-car-up-cost').innerText = state.businesses.car.upgradeCost.toLocaleString();
+
+            let rigMining = state.businesses.rig.count * state.businesses.rig.baseIncome * state.businesses.rig.level;
+            document.getElementById('biz-rig-info').innerText = `Rigy: ${state.businesses.rig.count} | Lev: ${state.businesses.rig.level}`;
+            document.getElementById('biz-rig-payout').innerText = `Těžba: +${rigMining.toFixed(1)} CBC/s`;
+            document.getElementById('biz-rig-cost').innerText = state.businesses.rig.cost.toLocaleString();
+            document.getElementById('biz-rig-up-cost').innerText = state.businesses.rig.upgradeCost.toLocaleString();
+
+            document.getElementById('stock-fruit-owned').innerText = `Vlastníš: ${state.market.fruit.owned} ks`;
+            document.getElementById('crypto-cyber-owned').innerText = `Vlastníš: ${state.market.cyber.owned} CBC`;
+            
+            let remaining = 15 - Math.floor((Date.now() - state.lastSpinTime) / 1000);
+            document.getElementById('casino-timer').innerText = remaining > 0 ? `Znovu za: ${remaining}s` : "Kolo připraveno.";
+        }
+
+        // --- SMYČKY ---
+        setInterval(() => {
+            let cafeInc = state.businesses.cafe.count * state.businesses.cafe.baseIncome * state.businesses.cafe.level;
+            let bankInc = state.businesses.bank.count * state.businesses.bank.baseIncome * state.businesses.bank.level;
+            let carInc = state.businesses.car.count * state.businesses.car.baseIncome * state.businesses.car.level;
+            state.balance += (cafeInc + bankInc + carInc);
+
+            let rigMining = state.businesses.rig.count * state.businesses.rig.baseIncome * state.businesses.rig.level;
+            state.market.cyber.owned = Number((state.market.cyber.owned + rigMining).toFixed(1));
+
+            updateUI(); save();
+        }, 1000);
+
+        setInterval(updateMarket, 3000);
+
+        function save() { if(currentProfileId) localStorage.setItem('bizProfile_' + currentProfileId, JSON.stringify(state)); }
+        function resetGame() { if (confirm("Smazat vše?")) { localStorage.clear(); location.reload(); } }
+
+        initProfile();
+        updateUI();
+        updateMarket();
+    </script>
+</body>
+</html>
