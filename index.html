@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Business Empire: Global Live Edition</title>
+    <title>Business Empire: Live Sync</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -42,7 +42,6 @@
             body { padding-top: calc(env(safe-area-inset-top) + 10px); }
         }
 
-        /* Profilová lišta */
         .profile-bar {
             background-color: var(--bg-card);
             border: 1px solid var(--border);
@@ -55,10 +54,8 @@
             align-items: center;
             font-size: 11px;
             margin-bottom: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* Hlavní HUD */
         .main-hud {
             background: linear-gradient(135deg, #1e1b4b 0%, #070a13 100%);
             border: 1px solid var(--border);
@@ -69,8 +66,6 @@
             box-sizing: border-box;
             text-align: center;
             margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            transition: background 0.2s ease;
         }
 
         .balance {
@@ -78,7 +73,6 @@
             font-weight: 900;
             color: var(--color-green);
             margin: 4px 0;
-            text-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
         }
 
         .stats-grid {
@@ -93,7 +87,6 @@
         }
         .stats-grid span { color: var(--text-main); font-weight: 700; display: block; margin-top: 2px;}
 
-        /* Spodní iOS Navigace bez posuvníku */
         .bottom-nav {
             position: fixed;
             bottom: 0; left: 0; right: 0;
@@ -105,18 +98,16 @@
             padding: 10px 0;
             padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
             z-index: 1000;
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
         }
 
         .nav-btn {
             background: none; border: none; color: var(--text-muted);
             display: flex; flex-direction: column; align-items: center; gap: 4px;
-            font-size: 10px; font-weight: 700; cursor: pointer; transition: color 0.2s;
+            font-size: 10px; font-weight: 700; cursor: pointer;
         }
         .nav-btn.active { color: var(--color-blue); }
         .nav-btn .icon { font-size: 20px; }
 
-        /* Panely obsahu */
         .tab-content { display: none; width: 100%; max-width: 420px; flex-direction: column; gap: 12px; box-sizing: border-box; }
         .tab-content.active { display: flex; }
 
@@ -125,7 +116,6 @@
         .card {
             background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
             padding: 14px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
         .info-block h3 { margin: 0 0 4px 0; font-size: 15px; }
@@ -134,18 +124,14 @@
         .chart-container { width: 70px; height: 35px; margin-right: 10px; background-color: rgba(0,0,0,0.2); border-radius: 6px; }
         .market-right { display: flex; align-items: center; }
 
-        /* Tlačítka */
         .btn {
             background-color: var(--color-blue); color: white; border: none;
             padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer;
         }
-        .btn:active { transform: scale(0.95); }
         .btn-success { background-color: var(--color-green); }
-        .btn-danger { background-color: var(--color-red); }
         .btn-purple { background-color: var(--color-purple); }
         .btn-small { padding: 4px 8px; font-size: 10px; border-radius: 6px; background-color: #334155;}
 
-        /* Kliker */
         .clicker-wrap { display: flex; flex-direction: column; align-items: center; padding: 15px 0; }
         .click-vault-btn {
             width: 130px; height: 130px; border-radius: 50%;
@@ -156,19 +142,19 @@
         }
         .click-vault-btn:active { transform: scale(0.93); }
 
-        /* Kolo štěstí žetony */
         .casino-box { background: linear-gradient(135deg, #2e1065 0%, #0f052d 100%); border: 1px solid var(--color-purple); border-radius: 20px; padding: 16px; box-sizing: border-box; }
         .bet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0; }
         .bet-chip { background-color: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 2px; font-size: 11px; font-weight: 700; border-radius: 8px; text-align: center; cursor: pointer; }
         .bet-chip.selected { background-color: var(--color-purple); border-color: #c084fc; color: white; box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
         .wheel-screen { font-size: 32px; font-weight: 900; color: var(--color-gold); text-align: center; padding: 15px 0; min-height: 38px; }
 
-        /* Žebříček list */
         .leaderboard-list { width: 100%; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
         .leaderboard-item { display: flex; justify-content: space-between; padding: 10px 14px; background-color: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; }
 
         .case-anim-box { background-color: #070a12; border-radius: 8px; padding: 10px; margin: 10px 0; font-weight: 700; font-size: 13px; text-align: center; color: var(--text-muted); border: 1px dashed #334155; }
         .reset-btn { background: none; border: 1px solid var(--color-red); color: var(--color-red); padding: 4px 8px; border-radius: 6px; font-size: 10px; margin-top: 25px; opacity: 0.3; cursor: pointer;}
+        
+        #sync-status-text { font-size: 11px; font-weight: bold; text-align: center; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -191,7 +177,7 @@
         </div>
     </div>
 
-    <!-- SPODNÍ iOS NAVIGACE -->
+    <!-- SPODNÍ NAVIGACE -->
     <div class="bottom-nav">
         <button class="nav-btn active" id="nav-clicker" onclick="switchTab('clicker')">
             <span class="icon">🖱️</span><span>Klik / Trh</span>
@@ -207,7 +193,7 @@
         </button>
     </div>
 
-    <!-- TAB 1: KLIKER & TRH S GRAFY -->
+    <!-- TAB 1: KLIKER & TRH -->
     <div id="tab-clicker" class="tab-content active">
         <div class="clicker-wrap">
             <div class="click-vault-btn" onclick="clickVault()">💎</div>
@@ -222,7 +208,6 @@
         </div>
 
         <div class="section-title">Finanční trhy</div>
-        <!-- Fruit Inc. -->
         <div class="card">
             <div class="info-block">
                 <h3>🍏 Fruit Inc. (Akcie)</h3>
@@ -237,7 +222,7 @@
                 </div>
             </div>
         </div>
-        <!-- CyberCoin -->
+
         <div class="card">
             <div class="info-block">
                 <h3>🪙 CyberCoin (CBC)</h3>
@@ -254,10 +239,9 @@
         </div>
     </div>
 
-    <!-- TAB 2: KOMPLETNÍ BYZNYS (S LEVELOVÁNÍM) -->
+    <!-- TAB 2: BYZNYS -->
     <div id="tab-business" class="tab-content">
         <div class="section-title">Pasivní Výdělek</div>
-        
         <div class="card">
             <div class="info-block">
                 <h3>☕ Pizzerie</h3>
@@ -308,7 +292,7 @@
         </div>
     </div>
 
-    <!-- TAB 3: HAZARD (KOLO ŠTĚSTÍ + BEDNY) -->
+    <!-- TAB 3: HAZARD -->
     <div id="tab-gambling" class="tab-content">
         <div class="section-title">Kolo Štěstí</div>
         <div class="casino-box">
@@ -348,18 +332,19 @@
         </div>
     </div>
 
-    <!-- TAB 4: ŽEBŘÍČEK & ONLINE SYNCHRONIZACE -->
+    <!-- TAB 4: ŽEBŘÍČEK -->
     <div id="tab-settings" class="tab-content">
         <div class="section-title">🏆 Globální Žebříček (Live Server)</div>
         <div class="card" style="flex-direction:column; align-items:stretch;">
             <div id="leaderboard-box" class="leaderboard-list">Načítám online žebříček...</div>
             <button class="btn btn-small" style="margin-top:10px;" onclick="loadLeaderboard()">🔄 Obnovit žebříček</button>
+            <div id="sync-status-text" style="color: var(--text-muted);">Stav cloudu: Neznámý</div>
         </div>
-        <center><button class="reset-btn" onclick="resetGame()">Smazat celou lokální databázi</button></center>
+        <center><button class="reset-btn" onclick="resetGame()">Smazat místní data</button></center>
     </div>
 
     <script>
-        // --- DATA OBJEKT ---
+        // --- DATA JÁDRO ---
         const DEFAULT_STATE = {
             balance: 1000, clickPower: 1, clickUpgradeCost: 150, clickUpgradeStep: 2, selectedBet: 100, lastSpinTime: 0,
             businesses: {
@@ -376,9 +361,11 @@
 
         let currentProfileId = "";
         let state = {};
-        const DATABASE_URL = "https://kvstore.io/api/v1/collections/bizEmpireLive2026/items";
+        
+        // PŘECHOD NA NOVÝ NEOMEZENÝ API BACKEND (JSONBIN)
+        const BACKEND_API = "https://api.jsonbin.io/v3/b/66185bbbe41b4d34e4e1dfcb"; 
 
-        // --- NAČTENÍ PROFILU (ONLINE INTERNET + LOKÁLNÍ PENĚŽENKA) ---
+        // --- NAČTENÍ PROFILU SE ZÁLOŽNÍM LOKÁLNÍM SAVE ---
         async function initProfile() {
             let activeId = localStorage.getItem('bizActiveProfileId');
             if (!activeId) {
@@ -388,23 +375,22 @@
             currentProfileId = activeId;
             document.getElementById('profile-id-display').innerText = currentProfileId;
             
-            try {
-                let res = await fetch(`${DATABASE_URL}/${currentProfileId}`);
-                if (res.ok) {
-                    let onlineData = await res.json();
-                    state = JSON.parse(onlineData.value);
-                } else {
-                    let savedData = localStorage.getItem('bizProfile_' + currentProfileId);
-                    state = savedData ? JSON.parse(savedData) : JSON.parse(JSON.stringify(DEFAULT_STATE));
-                }
-            } catch(e) {
-                let savedData = localStorage.getItem('bizProfile_' + currentProfileId);
-                state = savedData ? JSON.parse(savedData) : JSON.parse(JSON.stringify(DEFAULT_STATE));
-            }
+            // Vezmeme nejdřív lokální kopii, abychom mohli hned hrát
+            let savedData = localStorage.getItem('bizProfile_' + currentProfileId);
+            state = savedData ? JSON.parse(savedData) : JSON.parse(JSON.stringify(DEFAULT_STATE));
 
-            // Ošetření struktur trhu
-            if (!state.market) state.market = JSON.parse(JSON.stringify(DEFAULT_STATE.market));
-            if (!state.businesses.car) state.businesses.car = JSON.parse(JSON.stringify(DEFAULT_STATE.businesses.car));
+            // Pokusíme se synchronizovat data z cloudu na pozadí
+            try {
+                let res = await fetch(BACKEND_API + "/latest");
+                if (res.ok) {
+                    let cloudRes = await res.json();
+                    if (cloudRes.record && cloudRes.record[currentProfileId]) {
+                        state = cloudRes.record[currentProfileId];
+                        document.getElementById('sync-status-text').innerHTML = "✅ Cloud data načtena úspěšně";
+                        document.getElementById('sync-status-text').style.color = "var(--color-green)";
+                    }
+                }
+            } catch(e) { console.log("Cloud momentálně nedostupný, hrajeme offline."); }
 
             selectBet(state.selectedBet || 100);
             updateRank();
@@ -412,31 +398,60 @@
             loadLeaderboard();
         }
 
+        // --- ODESÍLÁNÍ DATA NA INTERNET (ZÁCHRANNÝ MECHANISMUS) ---
         async function save() {
             if(!currentProfileId) return;
             localStorage.setItem('bizProfile_' + currentProfileId, JSON.stringify(state));
+            
             try {
-                await fetch(`${DATABASE_URL}/${currentProfileId}`, {
+                // Nejdřív si stáhneme aktuální balík všech hráčů ze serveru
+                let getRes = await fetch(BACKEND_API + "/latest");
+                let masterRecord = {};
+                if(getRes.ok) {
+                    let json = await getRes.json();
+                    masterRecord = json.record || {};
+                }
+                
+                // Přidáme/Aktualizujeme náš profil v balíku
+                masterRecord[currentProfileId] = state;
+
+                // Nahrajeme celý balík zpět na cloud server
+                let putRes = await fetch(BACKEND_API, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ value: JSON.stringify(state) })
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Bin-Meta': 'false'
+                    },
+                    body: JSON.stringify(masterRecord)
                 });
-            } catch(e){}
+
+                let statusText = document.getElementById('sync-status-text');
+                if(putRes.ok && statusText) {
+                    statusText.innerHTML = "✅ Data uložena na cloud";
+                    statusText.style.color = "var(--color-green)";
+                }
+            } catch(e) {
+                let statusText = document.getElementById('sync-status-text');
+                if(statusText) {
+                    statusText.innerHTML = "❌ Lokální režim (Chyba cloudu)";
+                    statusText.style.color = "var(--color-red)";
+                }
+            }
         }
 
         async function loadLeaderboard() {
             let box = document.getElementById('leaderboard-box');
             try {
-                let res = await fetch(DATABASE_URL);
+                let res = await fetch(BACKEND_API + "/latest");
                 if(res.ok) {
-                    let allItems = await res.json();
+                    let json = await res.json();
+                    let masterRecord = json.record || {};
                     let players = [];
-                    allItems.forEach(item => {
-                        try {
-                            let pState = JSON.parse(item.value);
-                            players.push({ id: item.key, balance: pState.balance || 0 });
-                        } catch(err){}
-                    });
+                    
+                    for(let key in masterRecord) {
+                        players.push({ id: key, balance: masterRecord[key].balance || 0 });
+                    }
+                    
                     players.sort((a,b) => b.balance - a.balance);
                     box.innerHTML = "";
                     players.slice(0, 5).forEach((p, idx) => {
@@ -447,11 +462,11 @@
                             </div>`;
                     });
                 }
-            } catch(e) { box.innerHTML = "Žebříček je momentálně offline."; }
+            } catch(e) { box.innerHTML = "Žebříček se nepodařilo stáhnout."; }
         }
 
         function switchProfilePrompt() {
-            let targetId = prompt("Zadej své ID profilu pro synchronizaci mezi PC a mobilem:", currentProfileId);
+            let targetId = prompt("Zadej své ID profilu. Stejné ID na PC i mobilu ti zajistí synchronizaci:", currentProfileId);
             if (targetId && targetId.trim() !== "") {
                 targetId = targetId.trim().toUpperCase();
                 localStorage.setItem('bizActiveProfileId', targetId);
@@ -485,7 +500,7 @@
             if(tabId === 'settings') loadLeaderboard();
         }
 
-        function clickVault() { triggerHudFlash(true); state.balance += state.clickPower; updateUI(); }
+        function clickVault() { state.balance += state.clickPower; updateUI(); }
 
         function buyClickUpgrade() {
             if (state.balance >= state.clickUpgradeCost) {
@@ -543,9 +558,9 @@
 
         function spinWheel() {
             let now = Date.now();
-            if (now - state.lastSpinTime < 15000) { alert("Počkej na ochlazení kola!"); return; }
+            if (now - state.lastSpinTime < 15000) { return; }
             let bet = state.selectedBet;
-            if (state.balance < bet) { alert("Málo peněz!"); return; }
+            if (state.balance < bet) { return; }
 
             state.lastSpinTime = now; state.balance -= bet; updateUI();
             let btn = document.getElementById('spin-btn');
@@ -565,7 +580,6 @@
 
                     if (multiplier > 1) {
                         resDisplay.innerHTML = `<span style="color:var(--color-green)">${multiplier}x (+$${winAmount.toLocaleString()})</span>`;
-                        triggerHudFlash(true);
                     } else { resDisplay.innerHTML = `<span style="color:var(--color-red)">${multiplier}x</span>`; }
                     btn.disabled = false; updateRank(); updateUI(); save();
                 }
@@ -577,6 +591,7 @@
             emerald: [{name:"⚙️ GPU Rig",v:24000,c:"#a855f7"}, {name:"👑 Nůž ★",v:380000,c:"#fbbf24"}]
         };
 
+        type = 'case';
         function openCase(tier, cost) {
             if (state.balance < cost) return;
             state.balance -= cost; updateUI();
@@ -592,15 +607,9 @@
                     let final = roll < 0.75 ? pool[0] : pool[1];
                     state.balance += final.v;
                     box.innerHTML = `⭐ <span style="color:${final.c}">${final.name} (+$${final.v.toLocaleString()})</span>`;
-                    triggerHudFlash(true); updateRank(); updateUI(); save();
+                    updateRank(); updateUI(); save();
                 }
             }, 90);
-        }
-
-        function triggerHudFlash(pos) {
-            let h = document.getElementById('main-hud-panel');
-            h.style.background = pos ? "linear-gradient(135deg, #064e3b 0%, #070a13 100%)" : "linear-gradient(135deg, #4c0519 0%, #070a13 100%)";
-            setTimeout(() => h.style.background = "linear-gradient(135deg, #1e1b4b 0%, #070a13 100%)", 250);
         }
 
         function drawChart(id, hist, up) {
@@ -672,6 +681,7 @@
             document.getElementById('casino-timer').innerText = remaining > 0 ? `Znovu za: ${remaining}s` : "Kolo připraveno.";
         }
 
+        // Hlavní loop hry
         let saveCounter = 0;
         setInterval(() => {
             let cafeInc = state.businesses.cafe.count * state.businesses.cafe.baseIncome * state.businesses.cafe.level;
@@ -683,8 +693,13 @@
             state.market.cyber.owned = Number((state.market.cyber.owned + rigMining).toFixed(1));
 
             updateUI();
+            
+            // Odesílání na live cloud server každých 5 sekund, abychom neproklikali datové limity
             saveCounter++;
-            if(saveCounter >= 5) { save(); saveCounter = 0; }
+            if(saveCounter >= 5) {
+                save();
+                saveCounter = 0;
+            }
         }, 1000);
 
         setInterval(updateMarket, 3000);
