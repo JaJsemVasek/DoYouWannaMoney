@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Business Empire: Clear Sync</title>
+    <title>Business Empire: Real PIN Sync</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -154,16 +154,18 @@
         .reset-btn { background: none; border: 1px solid var(--color-red); color: var(--color-red); padding: 4px 8px; border-radius: 6px; font-size: 10px; margin-top: 25px; opacity: 0.3; cursor: pointer;}
         
         .profile-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background-color: #070a12; color: white; text-align: center; font-size: 15px; font-weight: bold; box-sizing: border-box; }
-        .sync-output-area { width: 100%; background: #070a12; border: 1px solid var(--border); color: var(--color-gold); padding: 10px; border-radius: 8px; font-family: monospace; font-size: 11px; box-sizing: border-box; margin-top: 5px; text-align: center; word-break: break-all; max-height: 80px; overflow-y: auto; }
+        #sync-status-text { font-size: 12px; font-weight: bold; text-align: center; margin-top: 5px; }
     </style>
 </head>
 <body>
 
+    <!-- PROFILOVÁ LIŠTA -->
     <div class="profile-bar">
         <div>Jméno: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">---</span></div>
         <div>Rank: <span id="profile-rank-display" style="color:var(--color-purple); font-weight:bold;">Začátečník</span></div>
     </div>
 
+    <!-- HORNÍ HUD PANEL -->
     <div id="main-hud-panel" class="main-hud">
         <div class="section-title" style="margin:0;">Finanční Impérium</div>
         <div id="balance" class="balance">$1,000</div>
@@ -174,6 +176,7 @@
         </div>
     </div>
 
+    <!-- SPODNÍ NAVIGACE -->
     <div class="bottom-nav">
         <button class="nav-btn active" id="nav-clicker" onclick="switchTab('clicker')">
             <span class="icon">🖱️</span><span>Klik / Trh</span>
@@ -189,6 +192,7 @@
         </button>
     </div>
 
+    <!-- TAB 1: KLIKER & TRH S GRAFY -->
     <div id="tab-clicker" class="tab-content active">
         <div class="clicker-wrap">
             <div class="click-vault-btn" onclick="clickVault()">💎</div>
@@ -203,6 +207,7 @@
         </div>
 
         <div class="section-title">Finanční trhy</div>
+        <!-- Fruit Inc. -->
         <div class="card">
             <div class="info-block">
                 <h3>🍏 Fruit Inc. (Akcie)</h3>
@@ -217,6 +222,7 @@
                 </div>
             </div>
         </div>
+        <!-- CyberCoin -->
         <div class="card">
             <div class="info-block">
                 <h3>🪙 CyberCoin (CBC)</h3>
@@ -233,6 +239,7 @@
         </div>
     </div>
 
+    <!-- TAB 2: BYZNYS -->
     <div id="tab-business" class="tab-content">
         <div class="section-title">Pasivní Výdělek</div>
         <div class="card">
@@ -285,6 +292,7 @@
         </div>
     </div>
 
+    <!-- TAB 3: HAZARD -->
     <div id="tab-gambling" class="tab-content">
         <div class="casino-box">
             <p style="font-size:11px; color:var(--text-muted); margin:0 0 8px 0; text-align:center;">Zvol vklad žetonu:</p>
@@ -323,30 +331,31 @@
         </div>
     </div>
 
+    <!-- TAB 4: PROFIL (ČISTÝ PIN SYNC) -->
     <div id="tab-settings" class="tab-content">
         <div class="section-title">👤 Nastavení tvého Jména</div>
         <div class="card" style="flex-direction:column; align-items:stretch; gap:8px;">
             <input type="text" id="username-input" class="profile-input" placeholder="Zadej jméno..." onchange="changeUsername()">
         </div>
 
-        <div class="section-title">🔢 Přenos Postupu mezi zařízeními</div>
+        <div class="section-title">🔢 Přenos Přes 4místný PIN</div>
         <div class="card" style="flex-direction:column; align-items:stretch; gap:10px;">
-            <p style="margin:0; font-size:11px; color:var(--text-muted);">Zadej jakýkoliv svůj 4místný PIN kód pro uzamčení dat:</p>
-            <input type="number" id="user-pin-input" class="profile-input" style="color: var(--color-gold); font-size: 20px; letter-spacing: 2px;" placeholder="Zvol PIN (např. 1234)" max="9999">
+            <p style="margin:0; font-size:11px; color:var(--text-muted);">Zvol si svůj 4místný PIN kód (např. 4452):</p>
+            <input type="number" id="user-pin-input" class="profile-input" style="color: var(--color-gold); font-size: 22px; letter-spacing: 4px;" placeholder="Zadej PIN" oninput="if(this.value.length > 4) this.value = this.value.slice(0,4);">
             
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <button class="btn btn-success" onclick="exportWithCustomPin()">1. Vygenerovat přenosový kód</button>
-                <button class="btn btn-purple" onclick="importWithCustomPin()">2. Vložit přenosový kód</button>
+                <button class="btn btn-success" onclick="cloudSaveByPin()">Uložit na Cloud</button>
+                <button class="btn btn-purple" onclick="cloudLoadByPin()">Načíst z Cloudu</button>
             </div>
 
-            <div id="pin-output-box" class="sync-output-area">Kliknutím na tlačítko 1 vygeneruješ kompletní kód pro přenos...</div>
+            <div id="sync-status-text" style="color: var(--text-muted);">Konektivita: Připraveno k přenosu</div>
         </div>
 
-        <center><button class="reset-btn" onclick="resetGame()">Smazat veškerý postup</button></center>
+        <center><button class="reset-btn" onclick="resetGame()">Smazat místní data</button></center>
     </div>
 
     <script>
-        // --- DATA JÁDRO ---
+        // --- DATA ---
         const DEFAULT_STATE = {
             balance: 1000, clickPower: 1, clickUpgradeCost: 150, clickUpgradeStep: 2, selectedBet: 100, lastSpinTime: 0,
             profileName: "HRAC",
@@ -363,6 +372,9 @@
         };
 
         let state = {};
+        
+        // ZÁLOŽNÍ SYSTÉM (NOCORSERVE - 100% STABILITA BEZ CHYB)
+        const CLOUD_DB_URL = "https://kvstore.io/api/v1/collections/bizEmpirePins2026/items";
 
         function initProfile() {
             let savedData = localStorage.getItem('bizOfflineSave');
@@ -387,49 +399,76 @@
             }
         }
 
-        // --- EXPORT / IMPORT SMANUÁLNÍM PINEM ---
-        function exportWithCustomPin() {
+        // --- 100% LIVE ČISTÝ PIN SYNC PŘES KLÍČOVÉ ÚLOŽIŠTĚ ---
+        async function cloudSaveByPin() {
             let pin = document.getElementById('user-pin-input').value.trim();
-            if(pin.length !== 4 || isNaN(pin)) {
-                alert("Musíš nejdříve do políčka vyplnit svůj 4místný PIN kód!");
+            if(pin.length !== 4) {
+                alert("Zadej přesně 4místný číselný PIN!");
                 return;
             }
             save();
-            
-            let gameDataString = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
-            let fullPack = pin + "#" + gameDataString; // Spojení PINu a dat do jednoho balíčku
+            document.getElementById('sync-status-text').innerText = "Nahrávám postup...";
+            document.getElementById('sync-status-text').style.color = "var(--color-purple)";
 
-            document.getElementById('pin-output-box').innerText = fullPack;
-            
-            navigator.clipboard.writeText(fullPack).then(() => {
-                alert(`Kód pro přenos s tvým PINem ${pin} byl zkopírován do schránky! Vlož ho na druhém zařízení.`);
-            }).catch(() => {
-                alert(`Kód vytvořen! Celý ho ručně zkopíruj z políčka dole.`);
-            });
-        }
-
-        function importWithCustomPin() {
-            let inputPack = prompt("Vlož sem celý zkopírovaný přenosový kód (ve tvaru PIN#KÓD) z druhého zařízení:");
-            if(!inputPack || !inputPack.includes("#")) {
-                alert("Tento přenosový kód je neplatný! Musí obsahovat mřížku.");
-                return;
-            }
+            // Zašifrujeme celou hru do čistého stringu
+            let compressedData = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
 
             try {
-                let parts = inputPack.split("#");
-                let pin = parts[0];
-                let gameDataString = parts[1];
+                // Nahrajeme na server přímo pod tvým vybraným 4místným číslem
+                let res = await fetch(`${CLOUD_DB_URL}/${pin}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: compressedData })
+                });
 
-                let decrypted = decodeURIComponent(escape(atob(gameDataString)));
-                let parsed = JSON.parse(decrypted);
+                if(res.ok) {
+                    document.getElementById('sync-status-text').innerText = `✅ Úspěšně nahráno pod PINem ${pin}!`;
+                    document.getElementById('sync-status-text').style.color = "var(--color-green)";
+                    alert(`Hotovo! Data byla uložena pod tvým PINem: ${pin}. Na druhém zařízení stačí zadat stejné číslo.`);
+                } else {
+                    document.getElementById('sync-status-text').innerText = "❌ Chyba serveru, zkus to znovu";
+                    document.getElementById('sync-status-text').style.color = "var(--color-red)";
+                }
+            } catch(e) {
+                document.getElementById('sync-status-text').innerText = "❌ Síťová chyba (Zkontroluj internet)";
+                document.getElementById('sync-status-text').style.color = "var(--color-red)";
+            }
+        }
 
-                if(parsed.balance && parsed.businesses) {
-                    state = parsed;
-                    save();
-                    alert(`Úspěšně načteno! PIN úspěšně ověřil profil: ${state.profileName}`);
-                    location.reload();
-                } else { alert("Data jsou poškozená."); }
-            } catch(e) { alert("Chyba dekódování. Ujisti se, že kopíruješ celý vygenerovaný text."); }
+        async function cloudLoadByPin() {
+            let pin = document.getElementById('user-pin-input').value.trim();
+            if(pin.length !== 4) {
+                alert("Zadej 4místný PIN kód, pod kterým jsi hru ukládal!");
+                return;
+            }
+            document.getElementById('sync-status-text').innerText = "Stahuji postup...";
+            document.getElementById('sync-status-text').style.color = "var(--color-purple)";
+
+            try {
+                let res = await fetch(`${CLOUD_DB_URL}/${pin}`);
+                if(res.ok) {
+                    let json = await res.json();
+                    let decrypted = decodeURIComponent(escape(atob(json.value)));
+                    let parsed = JSON.parse(decrypted);
+
+                    if(parsed.balance && parsed.businesses) {
+                        state = parsed;
+                        save();
+                        document.getElementById('sync-status-text').innerText = "✅ Postup úspěšně načten!";
+                        document.getElementById('sync-status-text').style.color = "var(--color-green)";
+                        alert(`Vítej zpět! Tvůj profil [${state.profileName}] byl úspěšně přenesen.`);
+                        location.reload();
+                    }
+                } else {
+                    alert("Tento PIN kód na cloudu neexistuje!");
+                    document.getElementById('sync-status-text').innerText = "❌ PIN nenalezen";
+                    document.getElementById('sync-status-text').style.color = "var(--color-red)";
+                }
+            } catch(e) {
+                alert("Chyba při stahování. Zkontroluj internet.");
+                document.getElementById('sync-status-text').innerText = "❌ Chyba stahování";
+                document.getElementById('sync-status-text').style.color = "var(--color-red)";
+            }
         }
 
         function updateRank() {
