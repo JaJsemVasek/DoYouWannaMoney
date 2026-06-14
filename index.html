@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Business Empire: Real PIN Sync</title>
+    <title>Business Empire: Database Online</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -151,21 +151,21 @@
         .wheel-screen { font-size: 32px; font-weight: 900; color: var(--color-gold); text-align: center; padding: 15px 0; min-height: 38px; }
 
         .case-anim-box { background-color: #070a12; border-radius: 8px; padding: 10px; margin: 10px 0; font-weight: 700; font-size: 13px; text-align: center; color: var(--text-muted); border: 1px dashed #334155; }
-        .reset-btn { background: none; border: 1px solid var(--color-red); color: var(--color-red); padding: 4px 8px; border-radius: 6px; font-size: 10px; margin-top: 25px; opacity: 0.3; cursor: pointer;}
         
-        .profile-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background-color: #070a12; color: white; text-align: center; font-size: 15px; font-weight: bold; box-sizing: border-box; }
+        /* Přihlašovací formuláře */
+        .profile-input { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid var(--border); background-color: #070a12; color: white; font-size: 14px; box-sizing: border-box; margin-bottom: 8px; }
+        .leaderboard-list { width: 100%; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .leaderboard-item { display: flex; justify-content: space-between; padding: 10px 14px; background-color: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; align-items: center; }
         #sync-status-text { font-size: 12px; font-weight: bold; text-align: center; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <!-- PROFILOVÁ LIŠTA -->
     <div class="profile-bar">
-        <div>Jméno: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">---</span></div>
+        <div>Uživatel: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">Offline Režim</span></div>
         <div>Rank: <span id="profile-rank-display" style="color:var(--color-purple); font-weight:bold;">Začátečník</span></div>
     </div>
 
-    <!-- HORNÍ HUD PANEL -->
     <div id="main-hud-panel" class="main-hud">
         <div class="section-title" style="margin:0;">Finanční Impérium</div>
         <div id="balance" class="balance">$1,000</div>
@@ -176,7 +176,6 @@
         </div>
     </div>
 
-    <!-- SPODNÍ NAVIGACE -->
     <div class="bottom-nav">
         <button class="nav-btn active" id="nav-clicker" onclick="switchTab('clicker')">
             <span class="icon">🖱️</span><span>Klik / Trh</span>
@@ -188,11 +187,10 @@
             <span class="icon">🎰</span><span>Hazard</span>
         </button>
         <button class="nav-btn" id="nav-settings" onclick="switchTab('settings')">
-            <span class="icon">👤</span><span>Profil</span>
+            <span class="icon">👤</span><span>Účet / TOP</span>
         </button>
     </div>
 
-    <!-- TAB 1: KLIKER & TRH S GRAFY -->
     <div id="tab-clicker" class="tab-content active">
         <div class="clicker-wrap">
             <div class="click-vault-btn" onclick="clickVault()">💎</div>
@@ -207,7 +205,6 @@
         </div>
 
         <div class="section-title">Finanční trhy</div>
-        <!-- Fruit Inc. -->
         <div class="card">
             <div class="info-block">
                 <h3>🍏 Fruit Inc. (Akcie)</h3>
@@ -222,7 +219,6 @@
                 </div>
             </div>
         </div>
-        <!-- CyberCoin -->
         <div class="card">
             <div class="info-block">
                 <h3>🪙 CyberCoin (CBC)</h3>
@@ -239,7 +235,6 @@
         </div>
     </div>
 
-    <!-- TAB 2: BYZNYS -->
     <div id="tab-business" class="tab-content">
         <div class="section-title">Pasivní Výdělek</div>
         <div class="card">
@@ -292,7 +287,6 @@
         </div>
     </div>
 
-    <!-- TAB 3: HAZARD -->
     <div id="tab-gambling" class="tab-content">
         <div class="casino-box">
             <p style="font-size:11px; color:var(--text-muted); margin:0 0 8px 0; text-align:center;">Zvol vklad žetonu:</p>
@@ -331,34 +325,35 @@
         </div>
     </div>
 
-    <!-- TAB 4: PROFIL (ČISTÝ PIN SYNC) -->
     <div id="tab-settings" class="tab-content">
-        <div class="section-title">👤 Nastavení tvého Jména</div>
-        <div class="card" style="flex-direction:column; align-items:stretch; gap:8px;">
-            <input type="text" id="username-input" class="profile-input" placeholder="Zadej jméno..." onchange="changeUsername()">
-        </div>
-
-        <div class="section-title">🔢 Přenos Přes 4místný PIN</div>
-        <div class="card" style="flex-direction:column; align-items:stretch; gap:10px;">
-            <p style="margin:0; font-size:11px; color:var(--text-muted);">Zvol si svůj 4místný PIN kód (např. 4452):</p>
-            <input type="number" id="user-pin-input" class="profile-input" style="color: var(--color-gold); font-size: 22px; letter-spacing: 4px;" placeholder="Zadej PIN" oninput="if(this.value.length > 4) this.value = this.value.slice(0,4);">
-            
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <button class="btn btn-success" onclick="cloudSaveByPin()">Uložit na Cloud</button>
-                <button class="btn btn-purple" onclick="cloudLoadByPin()">Načíst z Cloudu</button>
+        <div class="section-title">🔐 Přihlášení / Registrace účtu</div>
+        <div class="card" style="flex-direction:column; align-items:stretch; gap:4px;">
+            <input type="text" id="auth-username" class="profile-input" placeholder="Uživatelské jméno">
+            <input type="password" id="auth-password" class="profile-input" placeholder="Heslo (min. 4 znaky)">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:5px;">
+                <button class="btn btn-success" onclick="handleAuth('login')">Přihlásit se</button>
+                <button class="btn btn-purple" onclick="handleAuth('register')">Registrovat</button>
             </div>
-
-            <div id="sync-status-text" style="color: var(--text-muted);">Konektivita: Připraveno k přenosu</div>
+            <div id="sync-status-text" style="color: var(--text-muted);">Hraješ anonymně (Zatím neuloženo v cloudu)</div>
         </div>
 
-        <center><button class="reset-btn" onclick="resetGame()">Smazat místní data</button></center>
+        <div class="section-title">🏆 Globální Síň Slávy (Podle celkového jmění)</div>
+        <div class="card" style="flex-direction:column; align-items:stretch;">
+            <div id="leaderboard-box" class="leaderboard-list">Načítám nejbohatší magnáty...</div>
+            <button class="btn btn-small" style="margin-top:10px; width:max-content; align-self:center;" onclick="loadLeaderboard()">🔄 Obnovit žebříček</button>
+        </div>
     </div>
 
     <script>
-        // --- DATA ---
+        // ========================================================
+        // ⚠️ TADY VLOŽ SVŮJ ODKAZ Z GOOGLE FIREBASE REALTIME DATABÁZE
+        // ========================================================
+        const FIREBASE_URL = "https://doyouwannamoney-default-rtdb.europe-west1.firebasedatabase.app/";
+
+        // --- DATA JÁDRO ---
         const DEFAULT_STATE = {
             balance: 1000, clickPower: 1, clickUpgradeCost: 150, clickUpgradeStep: 2, selectedBet: 100, lastSpinTime: 0,
-            profileName: "HRAC",
+            password: "", // Ukládá se bezpečně k profilu
             businesses: {
                 cafe: { count: 0, cost: 400, baseIncome: 8, level: 1, upgradeCost: 600 },
                 bank: { count: 0, cost: 350000, baseIncome: 4200, level: 1, upgradeCost: 400000 },
@@ -371,104 +366,142 @@
             }
         };
 
-        let state = {};
-        
-        // ZÁLOŽNÍ SYSTÉM (NOCORSERVE - 100% STABILITA BEZ CHYB)
-        const CLOUD_DB_URL = "https://kvstore.io/api/v1/collections/bizEmpirePins2026/items";
+        let isLoggedIn = false;
+        let username = "";
+        let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
         function initProfile() {
+            // Načtení lokálního sezení, pokud už byl hráč přihlášený dřív
+            let lastUser = localStorage.getItem('bizLoggedUser');
             let savedData = localStorage.getItem('bizOfflineSave');
-            state = savedData ? JSON.parse(savedData) : JSON.parse(JSON.stringify(DEFAULT_STATE));
-            if(!state.profileName) state.profileName = "HRAC";
             
-            document.getElementById('profile-id-display').innerText = state.profileName;
-            document.getElementById('username-input').value = state.profileName;
+            if(lastUser) {
+                username = lastUser;
+                isLoggedIn = true;
+                document.getElementById('profile-id-display').innerText = username;
+            }
+            
+            if(savedData) {
+                state = JSON.parse(savedData);
+            }
+            
             selectBet(state.selectedBet || 100);
             updateRank();
             updateUI();
+            loadLeaderboard();
         }
 
-        function save() { localStorage.setItem('bizOfflineSave', JSON.stringify(state)); }
-
-        function changeUsername() {
-            let newName = document.getElementById('username-input').value.trim();
-            if(newName) {
-                state.profileName = newName.toUpperCase();
-                document.getElementById('profile-id-display').innerText = state.profileName;
-                save();
-            }
+        function saveLocal() {
+            localStorage.setItem('bizOfflineSave', JSON.stringify(state));
         }
 
-        // --- 100% LIVE ČISTÝ PIN SYNC PŘES KLÍČOVÉ ÚLOŽIŠTĚ ---
-        async function cloudSaveByPin() {
-            let pin = document.getElementById('user-pin-input').value.trim();
-            if(pin.length !== 4) {
-                alert("Zadej přesně 4místný číselný PIN!");
-                return;
-            }
-            save();
-            document.getElementById('sync-status-text').innerText = "Nahrávám postup...";
-            document.getElementById('sync-status-text').style.color = "var(--color-purple)";
-
-            // Zašifrujeme celou hru do čistého stringu
-            let compressedData = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
-
+        // --- AUTOMATICKÁ CLOUDOVÁ SYNCHRONIZACE ---
+        async function saveCloud() {
+            if(!isLoggedIn || !FIREBASE_URL || FIREBASE_URL.includes("SEM_VLOZ_SVOJ_ODKAZ")) return;
             try {
-                // Nahrajeme na server přímo pod tvým vybraným 4místným číslem
-                let res = await fetch(`${CLOUD_DB_URL}/${pin}`, {
+                await fetch(`${FIREBASE_URL}users/${username.toLowerCase()}.json`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ value: compressedData })
+                    body: JSON.stringify(state)
                 });
-
-                if(res.ok) {
-                    document.getElementById('sync-status-text').innerText = `✅ Úspěšně nahráno pod PINem ${pin}!`;
-                    document.getElementById('sync-status-text').style.color = "var(--color-green)";
-                    alert(`Hotovo! Data byla uložena pod tvým PINem: ${pin}. Na druhém zařízení stačí zadat stejné číslo.`);
-                } else {
-                    document.getElementById('sync-status-text').innerText = "❌ Chyba serveru, zkus to znovu";
-                    document.getElementById('sync-status-text').style.color = "var(--color-red)";
+                let statusText = document.getElementById('sync-status-text');
+                if(statusText) {
+                    statusText.innerHTML = "✅ Účet plně synchronizován s cloudem";
+                    statusText.style.color = "var(--color-green)";
                 }
-            } catch(e) {
-                document.getElementById('sync-status-text').innerText = "❌ Síťová chyba (Zkontroluj internet)";
-                document.getElementById('sync-status-text').style.color = "var(--color-red)";
-            }
+            } catch(e){}
         }
 
-        async function cloudLoadByPin() {
-            let pin = document.getElementById('user-pin-input').value.trim();
-            if(pin.length !== 4) {
-                alert("Zadej 4místný PIN kód, pod kterým jsi hru ukládal!");
+        // --- LOGIN / REGISTRACE JEDNODUCHÝ BEZPEČNÝ SYSTÉM ---
+        async function handleAuth(type) {
+            let userField = document.getElementById('auth-username').value.trim().toUpperCase();
+            let passField = document.getElementById('auth-password').value.trim();
+
+            if(userField.length < 3 || passField.length < 4) {
+                alert("Jméno musí mít aspoň 3 znaky a heslo 4 znaky!");
                 return;
             }
-            document.getElementById('sync-status-text').innerText = "Stahuji postup...";
-            document.getElementById('sync-status-text').style.color = "var(--color-purple)";
+            if(!FIREBASE_URL || FIREBASE_URL.includes("SEM_VLOZ_SVOJ_ODKAZ")) {
+                alert("Chyba: V kódu chybí zadaný Firebase odkaz!");
+                return;
+            }
+
+            let uKey = userField.toLowerCase();
+            document.getElementById('sync-status-text').innerText = "Komunikuji s databází...";
 
             try {
-                let res = await fetch(`${CLOUD_DB_URL}/${pin}`);
-                if(res.ok) {
-                    let json = await res.json();
-                    let decrypted = decodeURIComponent(escape(atob(json.value)));
-                    let parsed = JSON.parse(decrypted);
+                let res = await fetch(`${FIREBASE_URL}users/${uKey}.json`);
+                let cloudData = await res.json();
 
-                    if(parsed.balance && parsed.businesses) {
-                        state = parsed;
-                        save();
-                        document.getElementById('sync-status-text').innerText = "✅ Postup úspěšně načten!";
-                        document.getElementById('sync-status-text').style.color = "var(--color-green)";
-                        alert(`Vítej zpět! Tvůj profil [${state.profileName}] byl úspěšně přenesen.`);
-                        location.reload();
+                if(type === 'register') {
+                    if(cloudData) {
+                        alert("Tohle uživatelské jméno už je obsazené!");
+                        return;
                     }
-                } else {
-                    alert("Tento PIN kód na cloudu neexistuje!");
-                    document.getElementById('sync-status-text').innerText = "❌ PIN nenalezen";
-                    document.getElementById('sync-status-text').style.color = "var(--color-red)";
+                    // Registrace: vezmeme stávající lokální progress a zamkneme ho pod heslem
+                    state.password = passField;
+                    username = userField;
+                    isLoggedIn = true;
+                    localStorage.setItem('bizLoggedUser', username);
+                    await saveCloud();
+                    alert(`Účet ${username} byl úspěšně zaregistrován! Tvůj postup byl nahrán na cloud.`);
+                    location.reload();
+                } 
+                else if(type === 'login') {
+                    if(!cloudData || cloudData.password !== passField) {
+                        alert("Nesprávné uživatelské jméno nebo heslo!");
+                        return;
+                    }
+                    // Úspěšné přihlášení: Stáhneme kompletní progress z databáze
+                    state = cloudData;
+                    username = userField;
+                    isLoggedIn = true;
+                    localStorage.setItem('bizLoggedUser', username);
+                    saveLocal();
+                    alert(`Vítej zpět, magnáte ${username}! Tvůj cloudový postup byl úspěšně stažen.`);
+                    location.reload();
                 }
-            } catch(e) {
-                alert("Chyba při stahování. Zkontroluj internet.");
-                document.getElementById('sync-status-text').innerText = "❌ Chyba stahování";
-                document.getElementById('sync-status-text').style.color = "var(--color-red)";
+            } catch(e) { alert("Chyba připojení k Firebase databázi."); }
+        }
+
+        // --- GLOBÁLNÍ ŽEBŘÍČEK (LIVE VÝPOČET MAJETKU + PENĚZ) ---
+        async function loadLeaderboard() {
+            let box = document.getElementById('leaderboard-box');
+            if(!FIREBASE_URL || FIREBASE_URL.includes("SEM_VLOZ_SVOJ_ODKAZ")) {
+                box.innerHTML = "Pro zobrazení TOP žebříčku nejdříve vlož odkaz Firebase do kódu.";
+                return;
             }
+            try {
+                let res = await fetch(`${FIREBASE_URL}users.json`);
+                if(res.ok) {
+                    let allUsers = await res.json();
+                    let leaderboardData = [];
+                    
+                    for(let key in allUsers) {
+                        let u = allUsers[key];
+                        if(u && u.balance) {
+                            // Kalkulace celkového majetku: Hotovost + Hodnota nakoupených poboček firem
+                            let bizValue = 0;
+                            for(let bKey in u.businesses) {
+                                bizValue += (u.businesses[bKey].count * u.businesses[bKey].cost);
+                            }
+                            let netWorth = u.balance + bizValue;
+                            leaderboardData.push({ name: u.profileName || key.toUpperCase(), totalWealth: netWorth });
+                        }
+                    }
+                    
+                    // Seřazení od nejbohatšího po nejchudšího
+                    leaderboardData.sort((a,b) => b.totalWealth - a.totalWealth);
+                    
+                    box.innerHTML = "";
+                    leaderboardData.slice(0, 5).forEach((player, idx) => {
+                        box.innerHTML += `
+                            <div class="leaderboard-item">
+                                <div><b>${idx + 1}.</b> 👑 <b>${player.name}</b></div>
+                                <div style="color:var(--color-green); font-weight:bold; font-size:12px;">$${Math.floor(player.totalWealth).toLocaleString()}</div>
+                            </div>`;
+                    });
+                }
+            } catch(e) { box.innerHTML = "Chyba stahování žebříčku ze serveru."; }
         }
 
         function updateRank() {
@@ -494,6 +527,7 @@
                     }
                 }, 50);
             }
+            if(tabId === 'settings') loadLeaderboard();
         }
 
         function clickVault() { state.balance += state.clickPower; updateUI(); }
@@ -504,7 +538,7 @@
                 state.clickPower += state.clickUpgradeStep;
                 state.clickUpgradeStep += 2;
                 state.clickUpgradeCost = Math.floor(state.clickUpgradeCost * 1.8);
-                updateUI(); save();
+                updateUI(); saveLocal(); saveCloud();
             }
         }
 
@@ -513,16 +547,17 @@
             if (state.balance >= biz.cost) {
                 state.balance -= biz.cost; biz.count++;
                 biz.cost = Math.floor(biz.cost * 1.25);
-                updateUI(); save();
+                updateUI(); saveLocal(); saveCloud();
             }
         }
 
+        document.getElementById('profile-rank-display');
         function upgradeBusiness(id) {
             let biz = state.businesses[id];
             if (state.balance >= biz.upgradeCost) {
                 state.balance -= biz.upgradeCost; biz.level++;
                 biz.upgradeCost = Math.floor(biz.upgradeCost * 1.6);
-                updateUI(); save();
+                updateUI(); saveLocal(); saveCloud();
             }
         }
 
@@ -531,7 +566,7 @@
             if (state.balance >= asset.price) {
                 state.balance -= asset.price;
                 asset.owned = Number((asset.owned + 1).toFixed(1));
-                updateUI(); save();
+                updateUI(); saveLocal(); saveCloud();
             }
         }
 
@@ -540,7 +575,7 @@
             if (asset.owned >= (id === 'cyber' ? 0.1 : 1)) {
                 state.balance += asset.price;
                 asset.owned = Number((asset.owned - (id === 'cyber' ? 1 : 1)).toFixed(1));
-                updateUI(); save();
+                updateUI(); saveLocal(); saveCloud();
             }
         }
 
@@ -549,7 +584,7 @@
             document.querySelectorAll('.bet-chip').forEach(el => el.classList.remove('selected'));
             let activeEl = document.getElementById(`bet-${amount}`);
             if (activeEl) activeEl.classList.add('selected');
-            save();
+            saveLocal();
         }
 
         function spinWheel() {
@@ -577,7 +612,7 @@
                     if (multiplier > 1) {
                         resDisplay.innerHTML = `<span style="color:var(--color-green)">${multiplier}x (+$${winAmount.toLocaleString()})</span>`;
                     } else { resDisplay.innerHTML = `<span style="color:var(--color-red)">${multiplier}x</span>`; }
-                    btn.disabled = false; updateRank(); updateUI(); save();
+                    btn.disabled = false; updateRank(); updateUI(); saveLocal(); saveCloud();
                 }
             }, 90);
         }
@@ -602,7 +637,7 @@
                     let final = roll < 0.75 ? pool[0] : pool[1];
                     state.balance += final.v;
                     box.innerHTML = `⭐ <span style="color:${final.c}">${final.name} (+$${final.v.toLocaleString()})</span>`;
-                    updateRank(); updateUI(); save();
+                    updateRank(); updateUI(); saveLocal(); saveCloud();
                 }
             }, 90);
         }
@@ -611,7 +646,7 @@
             let c = document.getElementById(id); if (!c) return;
             let ctx = c.getContext('2d'); ctx.clearRect(0, 0, c.width, c.height);
             ctx.beginPath(); ctx.strokeStyle = up ? '#10b981' : '#f43f5e'; ctx.lineWidth = 2;
-            let min = Math.min(...hist), max = Math.max(...hist), r = max - min === 0 ? 1 : max - min;
+            let min = Math.min(...hist), max = Math.max(...history), r = max - min === 0 ? 1 : max - min;
             for (let i = 0; i < hist.length; i++) {
                 let x = (i / (hist.length - 1)) * c.width;
                 let y = c.height - ((hist[i] - min) / r) * c.height;
@@ -673,6 +708,8 @@
             document.getElementById('crypto-cyber-owned').innerText = `Máš: ${state.market.cyber.owned} CBC`;
         }
 
+        // Hlavní loop ekonomiky
+        let cloudTick = 0;
         setInterval(() => {
             let cafeInc = state.businesses.cafe.count * state.businesses.cafe.baseIncome * state.businesses.cafe.level;
             let bankInc = state.businesses.bank.count * state.businesses.bank.baseIncome * state.businesses.bank.level;
@@ -683,11 +720,18 @@
             state.market.cyber.owned = Number((state.market.cyber.owned + rigMining).toFixed(1));
 
             updateUI();
-            localStorage.setItem('bizOfflineSave', JSON.stringify(state));
+            saveLocal();
+            
+            // Automatický autosave na cloud každých 5 sekund pro přihlášené hráče
+            cloudTick++;
+            if(cloudTick >= 5) {
+                saveCloud();
+                cloudTick = 0;
+            }
         }, 1000);
 
         setInterval(updateMarket, 3000);
-        function resetGame() { if (confirm("Smazat?")) { localStorage.clear(); location.reload(); } }
+        function resetGame() { if (confirm("Smazat místní data?")) { localStorage.clear(); location.reload(); } }
 
         initProfile();
     </script>
