@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Business Empire: Infinite Pro 2026</title>
+    <title>Business Empire: Fixed Pro 2026</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -304,7 +304,6 @@
         <div class="card" style="flex-direction:column; align-items:stretch;">
             <div id="leaderboard-box" class="leaderboard-list">Načítám nejbohatší magnáty...</div>
         </div>
-        <center><button class="reset-btn" onclick="resetGame()">Smazat lokální data</button></center>
     </div>
 
     <script>
@@ -331,16 +330,39 @@
             football: { title: "⚽ Fotbalový Klub", sub1: "Stadion (Kapacita)", sub2: "Hvězdní Hráči (Výhry)", sub3: "Tréninkové zázemí" }
         };
 
+        // ZÁCHRANNÁ KONTROLA: Převádí textové typy z databází zpět na čistá čísla
+        function sanitizeState() {
+            state.balance = Number(state.balance) || 0;
+            state.clickPower = Number(state.clickPower) || 1;
+            state.clickUpgradeCost = Number(state.clickUpgradeCost) || 150;
+            state.clickUpgradeStep = Number(state.clickUpgradeStep) || 2;
+            state.selectedBet = Number(state.selectedBet) || 100;
+            state.cryptoHardwareLevel = Number(state.cryptoHardwareLevel) || 0;
+            state.cryptoHardwareCost = Number(state.cryptoHardwareCost) || 2500;
+            state.cryptoInventory = Number(state.cryptoInventory) || 0;
+            state.prestigeMultiplier = Number(state.prestigeMultiplier) || 1;
+            if(!state.luxury) state.luxury = { car: 0, yacht: 0, island: 0 };
+            state.luxury.car = Number(state.luxury.car) || 0;
+            state.luxury.yacht = Number(state.luxury.yacht) || 0;
+            if(!state.ownedBusinesses) state.ownedBusinesses = [];
+            if(!state.market || !state.market.fruit) {
+                state.market = JSON.parse(JSON.stringify(DEFAULT_STATE.market));
+            } else {
+                state.market.fruit.price = Number(state.market.fruit.price) || 100;
+                state.market.fruit.owned = Number(state.market.fruit.owned) || 0;
+            }
+        }
+
         function initProfile() {
             let lastUser = localStorage.getItem('bizLoggedUser');
             let savedData = localStorage.getItem('bizOfflineSave');
             
             if(savedData) {
-                state = JSON.parse(savedData);
-                if(!state.luxury) state.luxury = { car: 0, yacht: 0, island: 0 };
-                if(!state.ownedBusinesses) state.ownedBusinesses = [];
-                if(!state.market) state.market = JSON.parse(JSON.stringify(DEFAULT_STATE.market));
+                try {
+                    state = JSON.parse(savedData);
+                } catch(e) { state = JSON.parse(JSON.stringify(DEFAULT_STATE)); }
             }
+            sanitizeState();
 
             if(lastUser) {
                 username = lastUser;
@@ -349,12 +371,12 @@
                 fetchCloudData();
             }
             
-            selectBet(state.selectedBet || 100);
+            selectBet(state.selectedBet);
             updateRank();
             updateUI();
             renderBusinesses();
             loadLeaderboard();
-            startEconomicLoop(); // Hra běží okamžitě pro všechny!
+            startEconomicLoop();
         }
 
         async function fetchCloudData() {
@@ -363,6 +385,7 @@
                 let cloudData = await res.json();
                 if (cloudData) {
                     state = cloudData;
+                    sanitizeState();
                     document.getElementById('sync-status-text').innerHTML = "✅ Účet synchronizován s cloudem";
                     document.getElementById('sync-status-text').style.color = "var(--color-green)";
                     updateUI();
@@ -418,7 +441,8 @@
         }
 
         function buildNewBusiness(type, cost) {
-            if (state.balance < cost) { alert("Nemáš dost peněz!"); return; }
+            cost = Number(cost);
+            if (Number(state.balance) < cost) { alert("Nemáš dost peněz!"); return; }
             if (state.ownedBusinesses.length >= 10) { alert("Maximum 10 slotů!"); return; }
             
             state.balance -= cost;
@@ -436,10 +460,11 @@
             let costKey = 'cost' + sysIndex;
             let levelKey = 'level' + sysIndex;
 
-            if (state.balance >= biz[costKey]) {
-                state.balance -= biz[costKey];
-                biz[levelKey]++;
-                biz[costKey] = Math.floor(biz[costKey] * 1.7);
+            let currentCost = Number(biz[costKey]);
+            if (Number(state.balance) >= currentCost) {
+                state.balance -= currentCost;
+                biz[levelKey] = (Number(biz[levelKey]) || 1) + 1;
+                biz[costKey] = Math.floor(currentCost * 1.7);
                 saveLocal(); saveCloud(); updateUI(); renderBusinesses();
             } else { alert("Nedostatek financí!"); }
         }
@@ -467,15 +492,15 @@
                         <div>
                             <div class="sub-upgrade-row">
                                 <div><p style="margin:0; font-size:12px;"><b>${t.sub1}</b> (Lev: ${biz.level1})</p></div>
-                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 1)">Vylepšit ($${biz.cost1.toLocaleString()})</button>
+                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 1)">Vylepšit ($${Number(biz.cost1).toLocaleString()})</button>
                             </div>
                             <div class="sub-upgrade-row">
                                 <div><p style="margin:0; font-size:12px;"><b>${t.sub2}</b> (Lev: ${biz.level2})</p></div>
-                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 2)">Najmout ($${biz.cost2.toLocaleString()})</button>
+                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 2)">Najmout ($${Number(biz.cost2).toLocaleString()})</button>
                             </div>
                             <div class="sub-upgrade-row">
                                 <div><p style="margin:0; font-size:12px;"><b>${t.sub3}</b> (Lev: ${biz.level3})</p></div>
-                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 3)">Rozšířit ($${biz.cost3.toLocaleString()})</button>
+                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 3)">Rozšířit ($${Number(biz.cost3).toLocaleString()})</button>
                             </div>
                         </div>
                     </div>`;
@@ -483,41 +508,47 @@
         }
 
         function calculateSingleBizPayout(biz) {
-            let mult = state.prestigeMultiplier || 1;
-            if(biz.type === 'supermarket') return Math.floor((biz.level1 * 4 + biz.level2 * 6 + biz.level3 * 12) * mult);
-            if(biz.type === 'mhd') return Math.floor((biz.level1 * 25 + biz.level2 * 45 + biz.level3 * 90) * mult);
-            if(biz.type === 'football') return Math.floor((biz.level1 * 210 + biz.level2 * 450 + biz.level3 * 850) * mult);
+            let mult = Number(state.prestigeMultiplier) || 1;
+            let l1 = Number(biz.level1) || 1;
+            let l2 = Number(biz.level2) || 1;
+            let l3 = Number(biz.level3) || 1;
+            if(biz.type === 'supermarket') return Math.floor((l1 * 4 + l2 * 6 + l3 * 12) * mult);
+            if(biz.type === 'mhd') return Math.floor((l1 * 25 + l2 * 45 + l3 * 90) * mult);
+            if(biz.type === 'football') return Math.floor((l1 * 210 + l2 * 450 + l3 * 850) * mult);
             return 0;
         }
 
         function buyLuxuryAsset(id) {
             let cost = id === 'car' ? 120000 : 1500000;
-            if(state.balance >= cost) {
+            if(Number(state.balance) >= cost) {
                 state.balance -= cost; state.luxury[id]++;
                 updateRank(); updateUI(); saveLocal(); saveCloud();
             } else { alert("Málo peněz!"); }
         }
 
         function buyCryptoHardware() {
-            if(state.balance >= state.cryptoHardwareCost) {
-                state.balance -= state.cryptoHardwareCost; state.cryptoHardwareLevel++;
-                state.cryptoHardwareCost = Math.floor(state.cryptoHardwareCost * 1.9);
+            let hwCost = Number(state.cryptoHardwareCost);
+            if(Number(state.balance) >= hwCost) {
+                state.balance -= hwCost; 
+                state.cryptoHardwareLevel = (Number(state.cryptoHardwareLevel) || 0) + 1;
+                state.cryptoHardwareCost = Math.gradient ? Math.floor(hwCost * 1.9) : Math.floor(hwCost * 1.9);
                 updateUI(); saveLocal(); saveCloud();
             } else { alert("Málo peněz!"); }
         }
 
         function updateRank() {
+            let bal = Number(state.balance);
             let rank = "Začátečník 💼";
-            if (state.balance > 10000000) rank = "Finanční Magnát 👑";
-            else if (state.balance > 1000000) rank = "Milionář 💰";
-            else if (state.balance > 100000) rank = "Investor 📈";
+            if (bal > 10000000) rank = "Finanční Magnát 👑";
+            else if (bal > 1000000) rank = "Milionář 💰";
+            else if (bal > 100000) rank = "Investor 📈";
             document.getElementById('profile-rank-display').innerText = rank;
         }
 
         function triggerPrestige() {
-            if (state.balance < 25000000) { alert("Potřebuješ mít aspoň $25M!"); return; }
-            if(confirm("Resetovat hru s bonusem x" + (state.prestigeMultiplier + 1) + "?")) {
-                let m = state.prestigeMultiplier, p = state.password;
+            if (Number(state.balance) < 25000000) { alert("Potřebuješ mít aspoň $25M!"); return; }
+            if(confirm("Resetovat hru s bonusem x" + (Number(state.prestigeMultiplier) + 1) + "?")) {
+                let m = Number(state.prestigeMultiplier), p = state.password;
                 state = JSON.parse(JSON.stringify(DEFAULT_STATE)); state.prestigeMultiplier = m + 1; state.password = p;
                 saveLocal(); saveCloud(); location.reload();
             }
@@ -528,7 +559,7 @@
             try {
                 let res = await fetch(`${FIREBASE_URL}users.json`); if(!res.ok) return;
                 let all = await res.json(); let list = [];
-                for(let k in all) { if(all[k]) list.push({ name: k.toUpperCase(), cash: all[k].balance || 0 }); }
+                for(let k in all) { if(all[k]) list.push({ name: k.toUpperCase(), cash: Number(all[k].balance) || 0 }); }
                 list.sort((a,b) => b.cash - a.cash); box.innerHTML = "";
                 list.slice(0, 5).forEach((p, idx) => {
                     box.innerHTML += `<div class="leaderboard-item"><div>${idx+1}. 👑 <b>${p.name}</b></div><div style="color:var(--color-green)">$${Math.floor(p.cash).toLocaleString()}</div></div>`;
@@ -553,44 +584,67 @@
         }
 
         function clickVault() { 
-            state.balance += (state.clickPower * state.prestigeMultiplier); 
+            state.balance += (Number(state.clickPower) * Number(state.prestigeMultiplier)); 
             updateUI(); 
         }
         
         function buyClickUpgrade() {
-            if (state.balance >= state.clickUpgradeCost) {
-                state.balance -= state.clickUpgradeCost; state.clickPower += state.clickUpgradeStep; state.clickUpgradeStep += 2;
-                state.clickUpgradeCost = Math.floor(state.clickUpgradeCost * 1.8); updateUI(); saveLocal(); saveCloud();
+            let cCost = Number(state.clickUpgradeCost);
+            if (Number(state.balance) >= cCost) {
+                state.balance -= cCost; 
+                state.clickPower = Number(state.clickPower) + Number(state.clickUpgradeStep); 
+                state.clickUpgradeStep = Number(state.clickUpgradeStep) + 2;
+                state.clickUpgradeCost = Math.floor(cCost * 1.8); updateUI(); saveLocal(); saveCloud();
             } else { alert("Málo peněz!"); }
         }
 
         function buyAsset(id) {
             let asset = state.market[id];
-            if (state.balance >= asset.price) { state.balance -= asset.price; asset.owned++; updateUI(); saveLocal(); }
-            else { alert("Málo peněz!"); }
+            let price = Number(asset.price);
+            if (Number(state.balance) >= price) { 
+                state.balance -= price; 
+                asset.owned = (Number(asset.owned) || 0) + 1; 
+                updateUI(); saveLocal(); 
+            } else { alert("Málo peněz!"); }
         }
+        
         function sellAsset(id) {
             let asset = state.market[id];
-            if (asset.owned > 0) { state.balance += asset.price; asset.owned--; updateUI(); saveLocal(); }
+            let owned = Number(asset.owned) || 0;
+            if (owned > 0) { 
+                state.balance += Number(asset.price); 
+                asset.owned = owned - 1; 
+                updateUI(); saveLocal(); 
+            }
         }
 
         function selectBet(amount) {
-            state.selectedBet = amount; document.querySelectorAll('.bet-chip').forEach(el => el.classList.remove('selected'));
+            state.selectedBet = Number(amount); 
+            document.querySelectorAll('.bet-chip').forEach(el => el.classList.remove('selected'));
             let activeEl = document.getElementById(`bet-${amount}`); if (activeEl) activeEl.classList.add('selected');
         }
         
         function spinWheel() {
-            let now = Date.now(); if (now - state.lastSpinTime < 15000) return;
-            let bet = state.selectedBet; if (state.balance < bet) { alert("Málo peněz!"); return; }
-            state.lastSpinTime = now; state.balance -= bet; updateUI();
+            let now = Date.now(); if (now - Number(state.lastSpinTime) < 15000) return;
+            let bet = Number(state.selectedBet) || 100; 
+            if (Number(state.balance) < bet) { alert("Málo peněz!"); return; }
+            
+            state.lastSpinTime = now; 
+            state.balance -= bet; 
+            updateUI();
+            
             let btn = document.getElementById('spin-btn'), resDisplay = document.getElementById('wheel-result');
             btn.disabled = true; let counter = 0;
+            
             let anim = setInterval(() => {
                 resDisplay.innerText = (Math.random() * 3).toFixed(1) + "x"; counter++;
                 if (counter > 10) {
-                    clearInterval(anim); let mults = [0, 0.2, 0.5, 1.5, 3.0];
+                    clearInterval(anim); 
+                    let mults = [0, 0.2, 0.5, 1.5, 3.0];
                     let multiplier = mults[Math.floor(Math.random() * mults.length)];
-                    let win = Math.floor(bet * multiplier); state.balance += win;
+                    let win = Math.floor(bet * multiplier); 
+                    state.balance += win;
+                    
                     resDisplay.innerHTML = multiplier > 1 ? `<span style="color:var(--color-green)">${multiplier}x (+$${win.toLocaleString()})</span>` : `<span style="color:var(--color-red)">${multiplier}x</span>`;
                     btn.disabled = false; updateRank(); updateUI(); saveLocal(); saveCloud();
                 }
@@ -599,7 +653,8 @@
 
         const CASES = { bronze: [{name:"☕ Espresso",m:1.2}, {name:"💎 Safír",m:4.5}] };
         function openCase(tier, cost) {
-            if (state.balance < cost) { alert("Málo peněz!"); return; }
+            cost = Number(cost);
+            if (Number(state.balance) < cost) { alert("Málo peněz!"); return; }
             state.balance -= cost; updateUI();
             let box = document.getElementById(`case-anim-${tier}`), pool = CASES[tier], ticks = 0;
             let loop = setInterval(() => {
@@ -628,8 +683,8 @@
 
         function updateMarket() {
             for (let id in state.market) {
-                let a = state.market[id]; let v = 0.04; let old = a.price;
-                a.price = Math.max(5, Math.floor(a.price * (1 + (Math.random() * 2 - 1) * v) + (a.basePrice - a.price) * 0.015));
+                let a = state.market[id]; let v = 0.04; let old = Number(a.price);
+                a.price = Math.max(5, Math.floor(old * (1 + (Math.random() * 2 - 1) * v) + (Number(a.basePrice) - old) * 0.015));
                 if(!a.history || a.history.length === 0) a.history = [100, 100, 100, 100, 100, 100, 100, 100];
                 a.history.push(a.price); if (a.history.length > 8) a.history.shift();
                 let el = document.getElementById(`${a.type}-${id}-price`);
@@ -639,17 +694,18 @@
         }
 
         function updateUI() {
-            document.getElementById('balance').innerText = '$' + Math.floor(state.balance).toLocaleString();
-            document.getElementById('hud-crypto-owned').innerText = `${state.cryptoInventory ? state.cryptoInventory.toFixed(1) : '0.0'} CBC`;
-            document.getElementById('hud-click-power').innerText = '$' + (state.clickPower * state.prestigeMultiplier);
-            document.getElementById('click-cost').innerText = `Cena: $${state.clickUpgradeCost.toLocaleString()}`;
-            document.getElementById('click-next-gain').innerText = `+${state.clickUpgradeStep}`;
-            document.getElementById('crypto-hardware-status').innerText = `Aktuálně těžíš: ${(state.cryptoHardwareLevel * 0.1 * state.prestigeMultiplier).toFixed(1)} CBC/s`;
-            document.getElementById('crypto-hardware-cost').innerText = `Cena: $${state.cryptoHardwareCost.toLocaleString()}`;
+            let currentBal = Number(state.balance);
+            document.getElementById('balance').innerText = '$' + Math.floor(currentBal).toLocaleString();
+            document.getElementById('hud-crypto-owned').innerText = `${state.cryptoInventory ? Number(state.cryptoInventory).toFixed(1) : '0.0'} CBC`;
+            document.getElementById('hud-click-power').innerText = '$' + (Number(state.clickPower) * Number(state.prestigeMultiplier));
+            document.getElementById('click-cost').innerText = `Cena: $${Number(state.clickUpgradeCost).toLocaleString()}`;
+            document.getElementById('click-next-gain').innerText = `+${Number(state.clickUpgradeStep)}`;
+            document.getElementById('crypto-hardware-status').innerText = `Aktuálně těžíš: ${(Number(state.cryptoHardwareLevel) * 0.1 * Number(state.prestigeMultiplier)).toFixed(1)} CBC/s`;
+            document.getElementById('crypto-hardware-cost').innerText = `Cena: $${Number(state.cryptoHardwareCost).toLocaleString()}`;
 
             let totalBizIncome = 0;
             if(state.ownedBusinesses) { state.ownedBusinesses.forEach(b => { totalBizIncome += calculateSingleBizPayout(b); }); }
-            let luxuryExpenses = ((state.luxury ? state.luxury.car : 0) * 50) + ((state.luxury ? state.luxury.yacht : 0) * 400);
+            let luxuryExpenses = ((state.luxury ? Number(state.luxury.car) : 0) * 50) + ((state.luxury ? Number(state.luxury.yacht) : 0) * 400);
             let totalSec = totalBizIncome - luxuryExpenses;
 
             let hudPasive = document.getElementById('hud-pasive');
@@ -658,9 +714,9 @@
 
             document.getElementById('asset-car-count').innerText = `Vlastníš: ${state.luxury ? state.luxury.car : 0}`;
             document.getElementById('asset-yacht-count').innerText = `Vlastníš: ${state.luxury ? state.luxury.yacht : 0}`;
-            if(state.market && state.market.fruit) document.getElementById('stock-fruit-owned').innerText = state.market.fruit.owned;
+            if(state.market && state.market.fruit) document.getElementById('stock-fruit-owned').innerText = Number(state.market.fruit.owned) || 0;
             
-            let remaining = 15 - Math.floor((Date.now() - state.lastSpinTime) / 1000);
+            let remaining = 15 - Math.floor((Date.now() - Number(state.lastSpinTime)) / 1000);
             document.getElementById('casino-timer').innerText = remaining > 0 ? `Znovu za: ${remaining}s` : "Kolo připraveno.";
         }
 
@@ -669,10 +725,10 @@
             setInterval(() => {
                 let totalBizIncome = 0;
                 state.ownedBusinesses.forEach(b => { totalBizIncome += calculateSingleBizPayout(b); });
-                let luxuryExpenses = (state.luxury.car * 50) + (state.luxury.yacht * 400);
-                state.balance += (totalBizIncome - luxuryExpenses);
-
-                state.cryptoInventory += (state.cryptoHardwareLevel * 0.1 * state.prestigeMultiplier);
+                let luxuryExpenses = (Number(state.luxury.car) * 50) + (Number(state.luxury.yacht) * 400);
+                
+                state.balance = Number(state.balance) + (totalBizIncome - luxuryExpenses);
+                state.cryptoInventory = Number(state.cryptoInventory) + (Number(state.cryptoHardwareLevel) * 0.1 * Number(state.prestigeMultiplier));
 
                 updateUI(); 
                 saveLocal();
