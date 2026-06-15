@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Business Empire: Database Online</title>
+    <title>Business Empire: Evolution 2026</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -66,7 +66,7 @@
             max-width: 420px;
             box-sizing: border-box;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         }
 
@@ -134,15 +134,29 @@
         .btn-purple { background-color: var(--color-purple); }
         .btn-small { padding: 4px 8px; font-size: 10px; border-radius: 6px; background-color: #334155;}
 
-        .clicker-wrap { display: flex; flex-direction: column; align-items: center; padding: 15px 0; }
-        .click-vault-btn {
-            width: 120px; height: 120px; border-radius: 50%;
-            background: radial-gradient(circle, #2563eb 0%, #1d4ed8 100%);
-            border: 4px solid #3b82f6; font-size: 42px;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.4); margin-bottom: 20px;
+        /* NOVÁ VELKÁ KLIKACÍ ZÓNA */
+        .clicker-wrap { display: flex; flex-direction: column; align-items: center; padding: 10px 0; width: 100%; }
+        
+        .click-vault-giant {
+            width: 100%;
+            max-width: 420px;
+            height: 200px;
+            border-radius: 20px;
+            background: radial-gradient(circle, #1e3a8a 0%, #0f172a 100%);
+            border: 2px solid var(--color-blue);
+            font-size: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.2);
+            margin-bottom: 15px;
+            transition: transform 0.05s ease, box-shadow 0.2s ease;
         }
-        .click-vault-btn:active { transform: scale(0.93); }
+        .click-vault-giant:active {
+            transform: scale(0.97);
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+        }
 
         .casino-box { background: linear-gradient(135deg, #2e1065 0%, #0f052d 100%); border: 1px solid var(--color-purple); border-radius: 20px; padding: 16px; box-sizing: border-box; }
         .bet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0; }
@@ -151,31 +165,34 @@
         .wheel-screen { font-size: 32px; font-weight: 900; color: var(--color-gold); text-align: center; padding: 15px 0; min-height: 38px; }
 
         .case-anim-box { background-color: #070a12; border-radius: 8px; padding: 10px; margin: 10px 0; font-weight: 700; font-size: 13px; text-align: center; color: var(--text-muted); border: 1px dashed #334155; }
-        
-        /* Přihlašovací formuláře */
         .profile-input { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid var(--border); background-color: #070a12; color: white; font-size: 14px; box-sizing: border-box; margin-bottom: 8px; }
         .leaderboard-list { width: 100%; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
         .leaderboard-item { display: flex; justify-content: space-between; padding: 10px 14px; background-color: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; align-items: center; }
         #sync-status-text { font-size: 12px; font-weight: bold; text-align: center; margin-top: 5px; }
+        .reset-btn { background: none; border: 1px solid var(--color-red); color: var(--color-red); padding: 4px 8px; border-radius: 6px; font-size: 10px; margin-top: 25px; opacity: 0.3; cursor: pointer;}
     </style>
 </head>
 <body>
 
+    <!-- PROFILOVÁ LIŠTA -->
     <div class="profile-bar">
         <div>Uživatel: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">Offline Režim</span></div>
+        <div>Prestige: <span id="profile-prestige-display" style="color:var(--color-gold); font-weight:bold;">x1</span></div>
         <div>Rank: <span id="profile-rank-display" style="color:var(--color-purple); font-weight:bold;">Začátečník</span></div>
     </div>
 
+    <!-- HORNÍ HUD PANEL -->
     <div id="main-hud-panel" class="main-hud">
         <div class="section-title" style="margin:0;">Finanční Impérium</div>
         <div id="balance" class="balance">$1,000</div>
         <div class="stats-grid">
-            <div>Příjem/s<span id="hud-pasive" style="color: var(--color-green);">$0</span></div>
+            <div>Čistý Příjem/s<span id="hud-pasive" style="color: var(--color-green);">$0</span></div>
             <div>Kliknutí<span id="hud-click-power" style="color: var(--color-blue);">$1</span></div>
             <div>Krypto<span id="hud-crypto-owned" style="color: var(--color-gold);">0 CBC</span></div>
         </div>
     </div>
 
+    <!-- SPODNÍ NAVIGACE -->
     <div class="bottom-nav">
         <button class="nav-btn active" id="nav-clicker" onclick="switchTab('clicker')">
             <span class="icon">🖱️</span><span>Klik / Trh</span>
@@ -191,9 +208,12 @@
         </button>
     </div>
 
+    <!-- TAB 1: KLIKER & TRH (S OBŘÍ PLOCHOU) -->
     <div id="tab-clicker" class="tab-content active">
         <div class="clicker-wrap">
-            <div class="click-vault-btn" onclick="clickVault()">💎</div>
+            <!-- GIGANTICKÁ KLIKACÍ ZÓNA PRO iPHONE -->
+            <div class="click-vault-giant" onclick="clickVault()">💎</div>
+            
             <div class="card" style="width:100%;">
                 <div class="info-block">
                     <h3>Těžební AI Core</h3>
@@ -235,6 +255,7 @@
         </div>
     </div>
 
+    <!-- TAB 2: BYZNYS -->
     <div id="tab-business" class="tab-content">
         <div class="section-title">Pasivní Výdělek</div>
         <div class="card">
@@ -273,6 +294,19 @@
             </div>
         </div>
 
+        <!-- NOVÝ ENDGAME BYZNYS -->
+        <div class="card">
+            <div class="info-block">
+                <h3>🚀 Nexus Space (Vesmírná těžba)</h3>
+                <p id="biz-space-info">Rakety: 0 | Lev: 1</p>
+                <p style="color: var(--color-green);" id="biz-space-payout">Zisk: +$0/s</p>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+                <button class="btn btn-success" style="font-size:10px; padding:6px 10px;" onclick="buyBusiness('space')">Koupit ($<span id="biz-space-cost">50M</span>)</button>
+                <button class="btn btn-purple" style="font-size:10px; padding:6px 10px;" onclick="upgradeBusiness('space')">Rozšířit ($<span id="biz-space-up-cost">80M</span>)</button>
+            </div>
+        </div>
+
         <div class="section-title">Kryptoměnová Těžba</div>
         <div class="card">
             <div class="info-block">
@@ -287,6 +321,7 @@
         </div>
     </div>
 
+    <!-- TAB 3: HAZARD (VYBALANCOVANÝ) -->
     <div id="tab-gambling" class="tab-content">
         <div class="casino-box">
             <p style="font-size:11px; color:var(--text-muted); margin:0 0 8px 0; text-align:center;">Zvol vklad žetonu:</p>
@@ -301,14 +336,14 @@
             <p id="casino-timer" style="font-size:10px; color:var(--text-muted); margin-top:6px; text-align:center;"></p>
         </div>
 
-        <div class="section-title">Otevírání beden</div>
+        <div class="section-title">Vybalancované Kufříky</div>
         <div class="card" style="flex-direction:column; align-items:stretch; gap:10px;">
             <div style="display:flex; justify-content:between; align-items:center;">
                 <div>
                     <h4 style="margin:0; color:var(--color-gold);">🟫 Bronzový Kufřík</h4>
-                    <p style="font-size:11px; color:var(--text-muted);">Drop: až $2,500</p>
+                    <p style="font-size:11px; color:var(--text-muted);">Cena: $500 | Šance na zisk</p>
                 </div>
-                <button class="btn btn-small" onclick="openCase('bronze', 500)">Otevřít za $500</button>
+                <button class="btn btn-small" onclick="openCase('bronze', 500)">Otevřít</button>
             </div>
             <div id="case-anim-bronze" class="case-anim-box">ZAVŘENO</div>
         </div>
@@ -316,15 +351,16 @@
         <div class="card" style="flex-direction:column; align-items:stretch; gap:10px;">
             <div style="display:flex; justify-content:between; align-items:center;">
                 <div>
-                    <h4 style="margin:0; color:var(--color-green);">🟩 Smaragdový Kufřík</h4>
-                    <p style="font-size:11px; color:var(--text-muted);">Drop: až $400,000</p>
+                    <h4 style="margin:0; color:var(--color-purple);">🟩 Smaragdový Kufřík</h4>
+                    <p style="font-size:11px; color:var(--text-muted);">Cena: $50,000 | Vyvážený drop</p>
                 </div>
-                <button class="btn btn-small" onclick="openCase('emerald', 50000)">Otevřít za $50k</button>
+                <button class="btn btn-small" onclick="openCase('emerald', 50000)">Otevřít</button>
             </div>
             <div id="case-anim-emerald" class="case-anim-box">ZAVŘENO</div>
         </div>
     </div>
 
+    <!-- TAB 4: AUTENTIZACE A ŽEBŘÍČEK -->
     <div id="tab-settings" class="tab-content">
         <div class="section-title">🔐 Přihlášení / Registrace účtu</div>
         <div class="card" style="flex-direction:column; align-items:stretch; gap:4px;">
@@ -337,7 +373,14 @@
             <div id="sync-status-text" style="color: var(--text-muted);">Hraješ anonymně (Zatím neuloženo v cloudu)</div>
         </div>
 
-        <div class="section-title">🏆 Globální Síň Slávy (Podle celkového jmění)</div>
+        <!-- PRESTIGE SYSTÉM PANEL -->
+        <div class="section-title">💎 Prestige Reset</div>
+        <div class="card" style="flex-direction:column; align-items:stretch; gap:6px; text-align:center;">
+            <p style="margin:0; font-size:11px; color:var(--text-muted);">Vyžaduje hodnost Finanční Magnát a alespoň $25,000,000. Resetuje hotovost a firmy, ale dá trvalý **x2 násobič** na vše!</p>
+            <button class="btn btn-gold" style="margin-top:5px;" onclick="triggerPrestige()">Aktivovat Prestige</button>
+        </div>
+
+        <div class="section-title">🏆 Globální Síň Slávy</div>
         <div class="card" style="flex-direction:column; align-items:stretch;">
             <div id="leaderboard-box" class="leaderboard-list">Načítám nejbohatší magnáty...</div>
             <button class="btn btn-small" style="margin-top:10px; width:max-content; align-self:center;" onclick="loadLeaderboard()">🔄 Obnovit žebříček</button>
@@ -353,12 +396,14 @@
         // --- DATA JÁDRO ---
         const DEFAULT_STATE = {
             balance: 1000, clickPower: 1, clickUpgradeCost: 150, clickUpgradeStep: 2, selectedBet: 100, lastSpinTime: 0,
-            password: "", // Ukládá se bezpečně k profilu
+            password: "", 
+            prestigeMultiplier: 1, // Prestige systém
             businesses: {
                 cafe: { count: 0, cost: 400, baseIncome: 8, level: 1, upgradeCost: 600 },
                 bank: { count: 0, cost: 350000, baseIncome: 4200, level: 1, upgradeCost: 400000 },
                 rig: { count: 0, cost: 3500, baseIncome: 0.1, level: 1, upgradeCost: 5000 },
-                car: { count: 0, cost: 2000000, baseIncome: 24000, level: 1, upgradeCost: 3500000 }
+                car: { count: 0, cost: 2000000, baseIncome: 24000, level: 1, upgradeCost: 3500000 },
+                space: { count: 0, cost: 50000000, baseIncome: 650000, level: 1, upgradeCost: 80000000 }
             },
             market: {
                 fruit: { price: 100, owned: 0, basePrice: 100, type: 'stock', history: [100,100,100,100,100,100,100,100] },
@@ -371,7 +416,6 @@
         let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
         function initProfile() {
-            // Načtení lokálního sezení, pokud už byl hráč přihlášený dřív
             let lastUser = localStorage.getItem('bizLoggedUser');
             let savedData = localStorage.getItem('bizOfflineSave');
             
@@ -380,9 +424,11 @@
                 isLoggedIn = true;
                 document.getElementById('profile-id-display').innerText = username;
             }
-            
             if(savedData) {
                 state = JSON.parse(savedData);
+                // Ošetření struktur při načtení starší verze
+                if(!state.prestigeMultiplier) state.prestigeMultiplier = 1;
+                if(!state.businesses.space) state.businesses.space = JSON.parse(JSON.stringify(DEFAULT_STATE.businesses.space));
             }
             
             selectBet(state.selectedBet || 100);
@@ -391,11 +437,8 @@
             loadLeaderboard();
         }
 
-        function saveLocal() {
-            localStorage.setItem('bizOfflineSave', JSON.stringify(state));
-        }
+        function saveLocal() { localStorage.setItem('bizOfflineSave', JSON.stringify(state)); }
 
-        // --- AUTOMATICKÁ CLOUDOVÁ SYNCHRONIZACE ---
         async function saveCloud() {
             if(!isLoggedIn || !FIREBASE_URL || FIREBASE_URL.includes("SEM_VLOZ_SVOJ_ODKAZ")) return;
             try {
@@ -411,7 +454,6 @@
             } catch(e){}
         }
 
-        // --- LOGIN / REGISTRACE JEDNODUCHÝ BEZPEČNÝ SYSTÉM ---
         async function handleAuth(type) {
             let userField = document.getElementById('auth-username').value.trim().toUpperCase();
             let passField = document.getElementById('auth-password').value.trim();
@@ -420,93 +462,93 @@
                 alert("Jméno musí mít aspoň 3 znaky a heslo 4 znaky!");
                 return;
             }
-            if(!FIREBASE_URL || FIREBASE_URL.includes("SEM_VLOZ_SVOJ_ODKAZ")) {
-                alert("Chyba: V kódu chybí zadaný Firebase odkaz!");
-                return;
-            }
-
             let uKey = userField.toLowerCase();
-            document.getElementById('sync-status-text').innerText = "Komunikuji s databází...";
-
             try {
                 let res = await fetch(`${FIREBASE_URL}users/${uKey}.json`);
                 let cloudData = await res.json();
 
                 if(type === 'register') {
-                    if(cloudData) {
-                        alert("Tohle uživatelské jméno už je obsazené!");
-                        return;
-                    }
-                    // Registrace: vezmeme stávající lokální progress a zamkneme ho pod heslem
+                    if(cloudData) { alert("Tohle jméno už je obsazené!"); return; }
                     state.password = passField;
                     username = userField;
                     isLoggedIn = true;
                     localStorage.setItem('bizLoggedUser', username);
                     await saveCloud();
-                    alert(`Účet ${username} byl úspěšně zaregistrován! Tvůj postup byl nahrán na cloud.`);
+                    alert(`Účet zaregistrován!`);
                     location.reload();
-                } 
-                else if(type === 'login') {
-                    if(!cloudData || cloudData.password !== passField) {
-                        alert("Nesprávné uživatelské jméno nebo heslo!");
-                        return;
-                    }
-                    // Úspěšné přihlášení: Stáhneme kompletní progress z databáze
+                } else {
+                    if(!cloudData || cloudData.password !== passField) { alert("Špatné jméno nebo heslo!"); return; }
                     state = cloudData;
                     username = userField;
                     isLoggedIn = true;
                     localStorage.setItem('bizLoggedUser', username);
                     saveLocal();
-                    alert(`Vítej zpět, magnáte ${username}! Tvůj cloudový postup byl úspěšně stažen.`);
+                    alert(`Vítej zpět!`);
                     location.reload();
                 }
-            } catch(e) { alert("Chyba připojení k Firebase databázi."); }
+            } catch(e) { alert("Chyba Firebase."); }
         }
 
-        // --- GLOBÁLNÍ ŽEBŘÍČEK (LIVE VÝPOČET MAJETKU + PENĚZ) ---
-        async function loadLeaderboard() {
-            let box = document.getElementById('leaderboard-box');
-            if(!FIREBASE_URL || FIREBASE_URL.includes("SEM_VLOZ_SVOJ_ODKAZ")) {
-                box.innerHTML = "Pro zobrazení TOP žebříčku nejdříve vlož odkaz Firebase do kódu.";
+        // --- PRESTIGE SYSTEM MECHANIKA ---
+        function triggerPrestige() {
+            let totalBizValue = 0;
+            for(let key in state.businesses) {
+                totalBizValue += (state.businesses[key].count * state.businesses[key].cost);
+            }
+            let netWorth = state.balance + totalBizValue;
+
+            if (netWorth < 25000000) {
+                alert("Potřebuješ celkové jmění aspoň $25,000,000 na aktivaci Prestige!");
                 return;
             }
+
+            if(confirm(`Opravdu chceš aktivovat PRESTIGE? Tvůj současný multiplikátor x${state.prestigeMultiplier} se zvedne na x${state.prestigeMultiplier + 1}. Finance a firmy začnou od nuly.`)) {
+                let currentMult = state.prestigeMultiplier;
+                let currentPass = state.password;
+                
+                // Kompletní reset kromě Prestige a Hesla
+                state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+                state.prestigeMultiplier = currentMult + 1;
+                state.password = currentPass;
+
+                saveLocal();
+                saveCloud();
+                alert(`💥 PRESTIGE AKTIVOVÁNA! Nyní hraješ s násobkem x${state.prestigeMultiplier}!`);
+                location.reload();
+            }
+        }
+
+        async function loadLeaderboard() {
+            let box = document.getElementById('leaderboard-box');
             try {
                 let res = await fetch(`${FIREBASE_URL}users.json`);
                 if(res.ok) {
                     let allUsers = await res.json();
                     let leaderboardData = [];
-                    
                     for(let key in allUsers) {
                         let u = allUsers[key];
                         if(u && u.balance) {
-                            // Kalkulace celkového majetku: Hotovost + Hodnota nakoupených poboček firem
                             let bizValue = 0;
-                            for(let bKey in u.businesses) {
-                                bizValue += (u.businesses[bKey].count * u.businesses[bKey].cost);
-                            }
-                            let netWorth = u.balance + bizValue;
-                            leaderboardData.push({ name: u.profileName || key.toUpperCase(), totalWealth: netWorth });
+                            for(let bKey in u.businesses) { bizValue += (u.businesses[bKey].count * u.businesses[bKey].cost); }
+                            leaderboardData.push({ name: key.toUpperCase(), totalWealth: u.balance + bizValue, prestige: u.prestigeMultiplier || 1 });
                         }
                     }
-                    
-                    // Seřazení od nejbohatšího po nejchudšího
                     leaderboardData.sort((a,b) => b.totalWealth - a.totalWealth);
-                    
                     box.innerHTML = "";
                     leaderboardData.slice(0, 5).forEach((player, idx) => {
                         box.innerHTML += `
                             <div class="leaderboard-item">
-                                <div><b>${idx + 1}.</b> 👑 <b>${player.name}</b></div>
-                                <div style="color:var(--color-green); font-weight:bold; font-size:12px;">$${Math.floor(player.totalWealth).toLocaleString()}</div>
+                                <div><b>${idx + 1}.</b> 👑 <b>${player.name}</b> <span style="color:var(--color-gold); font-size:10px;">(P: x${player.prestige})</span></div>
+                                <div style="color:var(--color-green); font-weight:bold;">$${Math.floor(player.totalWealth).toLocaleString()}</div>
                             </div>`;
                     });
                 }
-            } catch(e) { box.innerHTML = "Chyba stahování žebříčku ze serveru."; }
+            } catch(e) {}
         }
 
         function updateRank() {
             let rank = "Začátečník 💼";
-            if (state.balance > 10000000) rank = "Finanční Magnát 👑";
+            if (state.balance > 25000000) rank = "Finanční Magnát 👑";
             else if (state.balance > 1000000) rank = "Milionář 💰";
             else if (state.balance > 100000) rank = "Investor 📈";
             document.getElementById('profile-rank-display').innerText = rank;
@@ -517,20 +559,21 @@
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.getElementById(`nav-${tabId}`).classList.add('active');
             document.getElementById(`tab-${tabId}`).classList.add('active');
-            
             if(tabId === 'clicker') {
                 setTimeout(() => {
                     for (let id in state.market) {
                         let asset = state.market[id];
-                        let isUp = asset.history[asset.history.length-1] >= asset.history[asset.history.length-2];
-                        drawChart(`chart-${id}`, asset.history, isUp);
+                        drawChart(`chart-${id}`, asset.history, asset.history[asset.history.length-1] >= asset.history[asset.history.length-2]);
                     }
                 }, 50);
             }
-            if(tabId === 'settings') loadLeaderboard();
         }
 
-        function clickVault() { state.balance += state.clickPower; updateUI(); }
+        // Aplikace Prestige násobiče na klikání
+        function clickVault() { 
+            state.balance += (state.clickPower * state.prestigeMultiplier); 
+            updateUI(); 
+        }
 
         function buyClickUpgrade() {
             if (state.balance >= state.clickUpgradeCost) {
@@ -551,7 +594,6 @@
             }
         }
 
-        document.getElementById('profile-rank-display');
         function upgradeBusiness(id) {
             let biz = state.businesses[id];
             if (state.balance >= biz.upgradeCost) {
@@ -588,55 +630,45 @@
         }
 
         function spinWheel() {
-            let now = Date.now();
-            if (now - state.lastSpinTime < 15000) { return; }
-            let bet = state.selectedBet;
-            if (state.balance < bet) { return; }
-
+            let now = Date.now(); if (now - state.lastSpinTime < 15000) return;
+            let bet = state.selectedBet; if (state.balance < bet) return;
             state.lastSpinTime = now; state.balance -= bet; updateUI();
-            let btn = document.getElementById('spin-btn');
-            let resDisplay = document.getElementById('wheel-result');
-            btn.disabled = true;
-            
-            let counter = 0;
+            let btn = document.getElementById('spin-btn'), resDisplay = document.getElementById('wheel-result');
+            btn.disabled = true; let counter = 0;
             let anim = setInterval(() => {
-                resDisplay.innerText = (Math.random() * 4).toFixed(1) + "x";
-                counter++;
+                resDisplay.innerText = (Math.random() * 3).toFixed(1) + "x"; counter++;
                 if (counter > 10) {
                     clearInterval(anim);
-                    let mults = [0, 0.2, 0.5, 1.5, 3.0];
+                    let mults = [0, 0.1, 0.5, 1.2, 2.0, 3.0]; // Rebalanc násobitelů
                     let multiplier = mults[Math.floor(Math.random() * mults.length)];
-                    let winAmount = Math.floor(bet * multiplier);
-                    state.balance += winAmount;
-
-                    if (multiplier > 1) {
-                        resDisplay.innerHTML = `<span style="color:var(--color-green)">${multiplier}x (+$${winAmount.toLocaleString()})</span>`;
-                    } else { resDisplay.innerHTML = `<span style="color:var(--color-red)">${multiplier}x</span>`; }
+                    let winAmount = Math.floor(bet * multiplier); state.balance += winAmount;
+                    resDisplay.innerHTML = multiplier > 1 ? `<span style="color:var(--color-green)">${multiplier}x (+$${winAmount.toLocaleString()})</span>` : `<span style="color:var(--color-red)">${multiplier}x</span>`;
                     btn.disabled = false; updateRank(); updateUI(); saveLocal(); saveCloud();
                 }
             }, 90);
         }
 
+        // REBALANC BEDEN: Odměny škálované podle ceny bedny, ne pevné miliony
         const CASES = {
-            bronze: [{name:"☕ Espresso",v:600,c:"#3b82f6"}, {name:"💎 Safír",v:2400,c:"#fbbf24"}],
-            emerald: [{name:"⚙️ GPU Rig",v:24000,c:"#a855f7"}, {name:"👑 Nůž ★",v:380000,c:"#fbbf24"}]
+            bronze: [{name:"💩 Ztráta vkladu",m:0.1}, {name:"🍕 Malý zisk",m:1.2}, {name:"💎 Zlatý prsten",m:3.5}],
+            emerald: [{name:"📉 Špatná investice",m:0.05}, {name:"⚙️ Těžební uzel",m:1.5}, {name:"👑 Nůž Lore ★",m:6.0}]
         };
 
         function openCase(tier, cost) {
-            if (state.balance < cost) return;
+            if (state.balance < cost) { alert("Málo peněz!"); return; }
             state.balance -= cost; updateUI();
-            let box = document.getElementById(`case-anim-${tier}`);
-            let pool = CASES[tier];
-            let ticks = 0;
+            let box = document.getElementById(`case-anim-${tier}`), pool = CASES[tier], ticks = 0;
             let loop = setInterval(() => {
-                box.innerHTML = pool[Math.floor(Math.random() * pool.length)].name;
-                ticks++;
+                box.innerHTML = pool[Math.floor(Math.random() * pool.length)].name; ticks++;
                 if(ticks > 8) {
                     clearInterval(loop);
                     let roll = Math.random();
-                    let final = roll < 0.75 ? pool[0] : pool[1];
-                    state.balance += final.v;
-                    box.innerHTML = `⭐ <span style="color:${final.c}">${final.name} (+$${final.v.toLocaleString()})</span>`;
+                    let final = roll < 0.60 ? pool[0] : (roll < 0.95 ? pool[1] : pool[2]); // Realistické šance (5% na trefu)
+                    
+                    // Výhra se počítá násobkem ceny bedny
+                    let win = Math.floor(cost * final.m);
+                    state.balance += win;
+                    box.innerHTML = `⭐ <span style="color:var(--color-gold)">${final.name} (+$${win.toLocaleString()})</span>`;
                     updateRank(); updateUI(); saveLocal(); saveCloud();
                 }
             }, 90);
@@ -646,10 +678,9 @@
             let c = document.getElementById(id); if (!c) return;
             let ctx = c.getContext('2d'); ctx.clearRect(0, 0, c.width, c.height);
             ctx.beginPath(); ctx.strokeStyle = up ? '#10b981' : '#f43f5e'; ctx.lineWidth = 2;
-            let min = Math.min(...hist), max = Math.max(...history), r = max - min === 0 ? 1 : max - min;
+            let min = Math.min(...hist), max = Math.max(...hist), r = max - min === 0 ? 1 : max - min;
             for (let i = 0; i < hist.length; i++) {
-                let x = (i / (hist.length - 1)) * c.width;
-                let y = c.height - ((hist[i] - min) / r) * c.height;
+                let x = (i / (hist.length - 1)) * c.width; let y = c.height - ((hist[i] - min) / r) * c.height;
                 if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             }
             ctx.stroke();
@@ -657,13 +688,10 @@
 
         function updateMarket() {
             for (let id in state.market) {
-                let a = state.market[id];
-                let v = a.type === 'crypto' ? 0.18 : 0.04;
-                let old = a.price;
+                let a = state.market[id]; let v = a.type === 'crypto' ? 0.18 : 0.04; let old = a.price;
                 a.price = Math.max(5, Math.floor(a.price * (1 + (Math.random() * 2 - 1) * v) + (a.basePrice - a.price) * 0.015));
                 if(!a.history) a.history = [a.price, a.price];
                 a.history.push(a.price); if (a.history.length > 8) a.history.shift();
-                
                 let el = document.getElementById(`${a.type}-${id}-price`);
                 if (el) { el.innerText = '$' + a.price.toLocaleString(); el.className = a.price >= old ? 'price-up' : 'price-down'; }
                 if(document.getElementById('tab-clicker').classList.contains('active')) drawChart(`chart-${id}`, a.history, a.price >= old);
@@ -673,66 +701,66 @@
         function updateUI() {
             document.getElementById('balance').innerText = '$' + Math.floor(state.balance).toLocaleString();
             document.getElementById('hud-crypto-owned').innerText = `${state.market.cyber.owned.toFixed(1)} CBC`;
-            document.getElementById('hud-click-power').innerText = '$' + state.clickPower;
+            document.getElementById('hud-click-power').innerText = '$' + (state.clickPower * state.prestigeMultiplier);
             document.getElementById('click-cost').innerText = `Cena: $${state.clickUpgradeCost.toLocaleString()}`;
             document.getElementById('click-next-gain').innerText = `+${state.clickUpgradeStep}`;
+            document.getElementById('profile-prestige-display').innerText = `x${state.prestigeMultiplier}`;
 
-            let cafeInc = state.businesses.cafe.count * state.businesses.cafe.baseIncome * state.businesses.cafe.level;
-            let bankInc = state.businesses.bank.count * state.businesses.bank.baseIncome * state.businesses.bank.level;
-            let carInc = state.businesses.car.count * state.businesses.car.baseIncome * state.businesses.car.level;
-            let total = cafeInc + bankInc + carInc;
-            document.getElementById('hud-pasive').innerText = `+$${total.toLocaleString()}`;
+            // Aplikace Prestige na pasivní příjmy
+            let cafeInc = state.businesses.cafe.count * state.businesses.cafe.baseIncome * state.businesses.cafe.level * state.prestigeMultiplier;
+            let bankInc = state.businesses.bank.count * state.businesses.bank.baseIncome * state.businesses.bank.level * state.prestigeMultiplier;
+            let carInc = state.businesses.car.count * state.businesses.car.baseIncome * state.businesses.car.level * state.prestigeMultiplier;
+            let spaceInc = state.businesses.space.count * state.businesses.space.baseIncome * state.businesses.space.level * state.prestigeMultiplier;
+            
+            // PROGRESIVNÍ DAŇ / CENA LOGISTIKY (Ztěžuje hru čím jsi bohatší)
+            let totalAssetsCount = state.businesses.cafe.count + state.businesses.bank.count + state.businesses.car.count + state.businesses.space.count;
+            let maintenanceTax = Math.floor(totalAssetsCount * 12); 
+            let total = (cafeInc + bankInc + carInc + spaceInc) - maintenanceTax;
 
-            document.getElementById('biz-cafe-info').innerText = `Pobočky: ${state.businesses.cafe.count} | Lev: ${state.businesses.cafe.level}`;
-            document.getElementById('biz-cafe-payout').innerText = `Zisk: +$${cafeInc.toLocaleString()}/s`;
-            document.getElementById('biz-cafe-cost').innerText = state.businesses.cafe.cost.toLocaleString();
-            document.getElementById('biz-cafe-up-cost').innerText = state.businesses.cafe.upgradeCost.toLocaleString();
+            let hudPasive = document.getElementById('hud-pasive');
+            hudPasive.innerText = (total >= 0 ? '+$' : '-$') + Math.abs(total).toLocaleString();
+            hudPasive.style.color = total >= 0 ? 'var(--color-green)' : 'var(--color-red)';
 
-            document.getElementById('biz-bank-info').innerText = `Holdingy: ${state.businesses.bank.count} | Lev: ${state.businesses.bank.level}`;
-            document.getElementById('biz-bank-payout').innerText = `Zisk: +$${bankInc.toLocaleString()}/s`;
-            document.getElementById('biz-bank-cost').innerText = state.businesses.bank.cost.toLocaleString();
-            document.getElementById('biz-bank-up-cost').innerText = state.businesses.bank.upgradeCost.toLocaleString();
-
-            document.getElementById('biz-car-info').innerText = `Továrny: ${state.businesses.car.count} | Lev: ${state.businesses.car.level}`;
-            document.getElementById('biz-car-payout').innerText = `Zisk: +$${carInc.toLocaleString()}/s`;
-            document.getElementById('biz-car-cost').innerText = state.businesses.car.cost.toLocaleString();
-            document.getElementById('biz-car-up-cost').innerText = state.businesses.car.upgradeCost.toLocaleString();
-
-            let rigMining = state.businesses.rig.count * state.businesses.rig.baseIncome * state.businesses.rig.level;
-            document.getElementById('biz-rig-info').innerText = `Rigy: ${state.businesses.rig.count} | Lev: ${state.businesses.rig.level}`;
-            document.getElementById('biz-rig-payout').innerText = `Těžba: +${rigMining.toFixed(1)} CBC/s`;
-            document.getElementById('biz-rig-cost').innerText = state.businesses.rig.cost.toLocaleString();
-            document.getElementById('biz-rig-up-cost').innerText = state.businesses.rig.upgradeCost.toLocaleString();
+            // UI Karty texty
+            for (let id in state.businesses) {
+                let biz = state.businesses[id];
+                let elInfo = document.getElementById(`biz-${id}-info`), elCost = document.getElementById(`biz-${id}-cost`), elUp = document.getElementById(`biz-${id}-up-cost`);
+                if(elInfo) elInfo.innerText = `${id === 'rig' ? 'Rigy' : 'Pobočky'}: ${biz.count} | Lev: ${biz.level}`;
+                if(elCost) elCost.innerText = biz.cost.toLocaleString();
+                if(elUp) elUp.innerText = biz.upgradeCost.toLocaleString();
+                
+                let elPayout = document.getElementById(`biz-${id}-payout`);
+                if(elPayout) {
+                    let pOut = biz.count * biz.baseIncome * biz.level * state.prestigeMultiplier;
+                    elPayout.innerText = id === 'rig' ? `Těžba: +${pOut.toFixed(1)} CBC/s` : `Zisk: +$${pOut.toLocaleString()}/s`;
+                }
+            }
 
             document.getElementById('stock-fruit-owned').innerText = `Máš: ${state.market.fruit.owned} ks`;
             document.getElementById('crypto-cyber-owned').innerText = `Máš: ${state.market.cyber.owned} CBC`;
+            let remaining = 15 - Math.floor((Date.now() - state.lastSpinTime) / 1000);
+            document.getElementById('casino-timer').innerText = remaining > 0 ? `Znovu za: ${remaining}s` : "Kolo připraveno.";
         }
 
-        // Hlavní loop ekonomiky
         let cloudTick = 0;
         setInterval(() => {
-            let cafeInc = state.businesses.cafe.count * state.businesses.cafe.baseIncome * state.businesses.cafe.level;
-            let bankInc = state.businesses.bank.count * state.businesses.bank.baseIncome * state.businesses.bank.level;
-            let carInc = state.businesses.car.count * state.businesses.car.baseIncome * state.businesses.car.level;
-            state.balance += (cafeInc + bankInc + carInc);
+            let cafeInc = state.businesses.cafe.count * state.businesses.cafe.baseIncome * state.businesses.cafe.level * state.prestigeMultiplier;
+            let bankInc = state.businesses.bank.count * state.businesses.bank.baseIncome * state.businesses.bank.level * state.prestigeMultiplier;
+            let carInc = state.businesses.car.count * state.businesses.car.baseIncome * state.businesses.car.level * state.prestigeMultiplier;
+            let spaceInc = state.businesses.space.count * state.businesses.space.baseIncome * state.businesses.space.level * state.prestigeMultiplier;
+            let totalAssetsCount = state.businesses.cafe.count + state.businesses.bank.count + state.businesses.car.count + state.businesses.space.count;
+            let maintenanceTax = Math.floor(totalAssetsCount * 12);
 
-            let rigMining = state.businesses.rig.count * state.businesses.rig.baseIncome * state.businesses.rig.level;
+            state.balance += ((cafeInc + bankInc + carInc + spaceInc) - maintenanceTax);
+
+            let rigMining = state.businesses.rig.count * state.businesses.rig.baseIncome * state.businesses.rig.level * state.prestigeMultiplier;
             state.market.cyber.owned = Number((state.market.cyber.owned + rigMining).toFixed(1));
 
-            updateUI();
-            saveLocal();
-            
-            // Automatický autosave na cloud každých 5 sekund pro přihlášené hráče
-            cloudTick++;
-            if(cloudTick >= 5) {
-                saveCloud();
-                cloudTick = 0;
-            }
+            updateUI(); saveLocal();
+            cloudTick++; if(cloudTick >= 5) { saveCloud(); cloudTick = 0; }
         }, 1000);
 
         setInterval(updateMarket, 3000);
-        function resetGame() { if (confirm("Smazat místní data?")) { localStorage.clear(); location.reload(); } }
-
         initProfile();
     </script>
 </body>
