@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Business Empire: Fixed Pro 2026</title>
+    <title>Business Empire: Evolution Pro</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -11,16 +11,20 @@
 
     <style>
         :root {
-            --bg-dark: #070a13;
-            --bg-card: #111927;
-            --border: #1f2d44;
+            --bg-dark: #0a0f1d;
+            --bg-card: #141b2d;
+            --bg-card-hover: #1c263f;
+            --border: rgba(255, 255, 255, 0.08);
             --text-main: #f8fafc;
-            --text-muted: #64748b;
+            --text-muted: #94a3b8;
             --color-green: #10b981;
             --color-red: #f43f5e;
             --color-blue: #3b82f6;
             --color-gold: #fbbf24;
             --color-purple: #a855f7;
+            --gradient-hud: linear-gradient(135deg, #1e1b4b 0%, #0a0f1d 100%);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
 
         body {
@@ -34,113 +38,239 @@
             align-items: center;
             -webkit-user-select: none;
             user-select: none;
-            padding-bottom: 110px;
+            padding-bottom: 120px;
             box-sizing: border-box;
         }
 
         @supports (padding-top: env(safe-area-inset-top)) {
-            body { padding-top: calc(env(safe-area-inset-top) + 10px); }
+            body { padding-top: calc(env(safe-area-inset-top) + 12px); }
         }
 
+        /* TOP PROFILE BAR */
         .profile-bar {
-            background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
-            padding: 10px 14px; width: 100%; max-width: 440px;
-            display: flex; justify-content: space-between; align-items: center; font-size: 11px; margin-bottom: 12px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px 16px;
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
         }
 
+        .badge-status {
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+
+        /* MAIN HUD PANEL */
         .main-hud {
-            background: linear-gradient(135deg, #1e1b4b 0%, #070a13 100%);
-            border: 1px solid var(--border); border-radius: 20px; padding: 16px;
-            width: 100%; max-width: 440px; box-sizing: border-box; text-align: center; margin-bottom: 15px;
+            background: var(--gradient-hud);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 20px;
+            width: 100%;
+            max-width: 440px;
+            box-sizing: border-box;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
         }
 
-        .balance { font-size: 34px; font-weight: 900; color: var(--color-green); margin: 4px 0; }
+        .balance-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .balance {
+            font-size: 38px;
+            font-weight: 900;
+            color: var(--color-green);
+            margin: 6px 0;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
 
         .stats-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px;
-            margin-top: 10px; font-size: 11px; color: var(--text-muted);
-            border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+            font-size: 11px;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 12px;
         }
-        .stats-grid span { color: var(--text-main); font-weight: 700; display: block; margin-top: 2px;}
+        .stats-grid span {
+            color: var(--text-main);
+            font-weight: 800;
+            display: block;
+            margin-top: 4px;
+            font-size: 13px;
+        }
 
+        /* NAVIGATION BAR */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background-color: rgba(17, 25, 39, 0.95); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-            border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(5, 1fr);
-            padding: 10px 0; padding-bottom: calc(env(safe-area-inset-bottom) + 10px); z-index: 1000;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(20, 27, 45, 0.94);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 12px 0;
+            padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+            z-index: 1000;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
         }
 
         .nav-btn {
-            background: none; border: none; color: var(--text-muted);
-            display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: color 0.2s, transform 0.1s;
         }
         .nav-btn.active { color: var(--color-blue); }
-        .nav-btn .icon { font-size: 18px; }
+        .nav-btn .icon { font-size: 20px; }
+        .nav-btn:active { transform: scale(0.92); }
 
-        .tab-content { display: none; width: 100%; max-width: 440px; flex-direction: column; gap: 12px; box-sizing: border-box; }
+        /* TABS & CARDS */
+        .tab-content { display: none; width: 100%; max-width: 440px; flex-direction: column; gap: 14px; box-sizing: border-box; }
         .tab-content.active { display: flex; }
 
-        .section-title { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1.5px; margin: 8px 0 2px 4px; font-weight: 800; }
+        .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1.8px;
+            margin: 12px 0 4px 4px;
+            font-weight: 800;
+        }
         
         .card {
-            background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
-            padding: 14px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            width: 100%;
+            box-shadow: var(--shadow-sm);
         }
 
-        .info-block h3 { margin: 0 0 4px 0; font-size: 15px; }
-        .info-block p { margin: 0; font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+        .info-block h3 { margin: 0 0 4px 0; font-size: 16px; font-weight: 700; }
+        .info-block p { margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 
+        /* BUTTONS */
         .btn {
-            background-color: var(--color-blue); color: white; border: none;
-            padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; transition: transform 0.1s;
+            background-color: var(--color-blue);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
         }
-        .btn:active { transform: scale(0.95); }
-        .btn-success { background-color: var(--color-green); }
-        .btn-purple { background-color: var(--color-purple); }
-        .btn-gold { background-color: var(--color-gold); color: #000; }
-        .btn-small { padding: 4px 8px; font-size: 10px; border-radius: 6px; background-color: #334155;}
+        .btn:hover { filter: brightness(1.1); }
+        .btn:active { transform: scale(0.96); }
+        .btn-success { background-color: var(--color-green); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
+        .btn-purple { background-color: var(--color-purple); box-shadow: 0 4px 12px rgba(168, 85, 247, 0.2); }
+        .btn-gold { background-color: var(--color-gold); color: #0a0f1d; box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2); }
+        .btn-danger { background-color: var(--color-red); box-shadow: 0 4px 12px rgba(244, 63, 94, 0.2); }
+        .btn-small { padding: 6px 12px; font-size: 11px; border-radius: 8px; background-color: #242f4d; box-shadow: none; }
+        .btn-block { width: 100%; padding: 12px; border-radius: 14px; font-size: 14px; }
 
-        .clicker-wrap { display: flex; flex-direction: column; align-items: center; padding: 10px 0; width: 100%; }
+        /* GIANT VAULT CLICKER */
+        .clicker-wrap { display: flex; flex-direction: column; align-items: center; padding: 5px 0; width: 100%; }
         .click-vault-giant {
-            width: 100%; height: 160px; border-radius: 20px;
-            background: radial-gradient(circle, #1e3a8a 0%, #0f172a 100%); border: 2px solid var(--color-blue);
-            font-size: 64px; display: flex; align-items: center; justify-content: center; cursor: pointer;
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.2); margin-bottom: 15px;
+            width: 100%; height: 180px; border-radius: 24px;
+            background: radial-gradient(circle, #2563eb 0%, #1d4ed8 50%, #0f172a 100%);
+            border: 2px solid rgba(255,255,255,0.1);
+            font-size: 72px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3); margin-bottom: 20px;
+            transition: transform 0.05s, filter 0.1s;
         }
-        .click-vault-giant:active { transform: scale(0.97); }
+        .click-vault-giant:active { transform: scale(0.96); filter: brightness(1.2); }
 
-        .casino-box { background: linear-gradient(135deg, #2e1065 0%, #0f052d 100%); border: 1px solid var(--color-purple); border-radius: 20px; padding: 16px; box-sizing: border-box; }
-        .bet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0; }
-        .bet-chip { background-color: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 2px; font-size: 11px; font-weight: 700; border-radius: 8px; text-align: center; cursor: pointer; }
-        .bet-chip.selected { background-color: var(--color-purple); border-color: #c084fc; color: white; box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); }
-        .wheel-screen { font-size: 32px; font-weight: 900; color: var(--color-gold); text-align: center; padding: 15px 0; min-height: 38px; }
+        /* MARKET SECTION */
+        .market-right { display: flex; align-items: center; gap: 12px; }
+        .chart-container { width: 75px; height: 38px; background-color: rgba(0,0,0,0.3); border-radius: 8px; padding: 2px; }
 
-        .case-anim-box { background-color: #070a12; border-radius: 8px; padding: 10px; margin: 10px 0; font-weight: 700; font-size: 13px; text-align: center; color: var(--text-muted); border: 1px dashed #334155; }
-        .profile-input { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid var(--border); background-color: #070a12; color: white; font-size: 14px; box-sizing: border-box; margin-bottom: 8px; }
-        
+        /* CASINO & WHEEL */
+        .casino-box { background: linear-gradient(135deg, #3b0764 0%, #0f052d 100%); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 24px; padding: 20px; box-sizing: border-box; box-shadow: var(--shadow-md); }
+        .bet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 14px 0; }
+        .bet-chip { background-color: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text-muted); padding: 10px 2px; font-size: 12px; font-weight: 800; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .bet-chip.selected { background-color: var(--color-purple); border-color: #d8b4fe; color: white; box-shadow: 0 0 15px rgba(168, 85, 247, 0.5); }
+        .wheel-screen { font-size: 34px; font-weight: 900; color: var(--color-gold); text-align: center; padding: 20px 0; min-height: 40px; text-shadow: 0 0 15px rgba(251, 191, 36, 0.3); }
+
+        /* BUSINESS LAYOUT */
         .sub-upgrade-row {
-            display: grid; grid-template-columns: 1fr auto; background-color: rgba(0,0,0,0.2);
-            padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); align-items: center; margin-top: 6px;
+            display: grid; grid-template-columns: 1fr auto; background-color: rgba(0,0,0,0.25);
+            padding: 10px 14px; border-radius: 12px; border: 1px solid var(--border); align-items: center; margin-top: 8px;
         }
 
-        .chart-container { width: 65px; height: 32px; margin-right: 8px; background-color: rgba(0,0,0,0.2); border-radius: 6px; }
+        /* INPUTS & NOTIFICATIONS */
+        .profile-input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background-color: rgba(0,0,0,0.3); color: white; font-size: 14px; box-sizing: border-box; margin-bottom: 10px; outline: none; transition: border-color 0.2s; }
+        .profile-input:focus { border-color: var(--color-blue); }
+        .case-anim-box { background-color: #05070f; border-radius: 12px; padding: 12px; margin: 12px 0; font-weight: 800; font-size: 14px; text-align: center; color: var(--text-muted); border: 1px dashed #242f4d; }
+        
+        .leaderboard-item { display: flex; justify-content: space-between; padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+        .leaderboard-item:last-child { border: none; }
+
+        .btn-danger-outline { background: none; border: 1px solid var(--color-red); color: var(--color-red); box-shadow: none; }
+        
+        /* NOTIFICATION BANNER */
+        #save-popup {
+            position: fixed; top: 24px; background-color: var(--color-green); color: #0a0f1d;
+            font-weight: 800; padding: 10px 20px; border-radius: 30px; font-size: 13px;
+            box-shadow: var(--shadow-md); z-index: 2000; transform: translateY(-100px); opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #save-popup.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
 <body>
 
+    <div id="save-popup">⚡ Data bezpečně uložena!</div>
+
     <div class="profile-bar">
-        <div>Uživatel: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">Anonymní režim</span></div>
-        <div>Prestige: <span id="profile-prestige-display" style="color:var(--color-gold); font-weight:bold;">x1</span></div>
-        <div>Rank: <span id="profile-rank-display" style="color:var(--color-purple); font-weight:bold;">Začátečník</span></div>
+        <div>Uživatel: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">Anonym</span></div>
+        <div>Multiplikátor: <span id="profile-prestige-display" style="color:var(--color-gold); font-weight:bold;">x1</span></div>
+        <div id="profile-rank-badge" class="badge-status" style="background-color:#1e293b; color:var(--text-muted);">Začátečník</div>
     </div>
 
     <div id="main-hud-panel" class="main-hud">
-        <div class="section-title" style="margin:0;">Finanční Impérium</div>
+        <div class="balance-label">Dostupný Kapitál</div>
         <div id="balance" class="balance">$1,000</div>
         <div class="stats-grid">
-            <div>Čistý Zisk/s<span id="hud-pasive" style="color: var(--color-green);">$0</span></div>
-            <div>Kliknutí<span id="hud-click-power" style="color: var(--color-blue);">$1</span></div>
-            <div>Krypto<span id="hud-crypto-owned" style="color: var(--color-gold);">0 CBC</span></div>
+            <div>Zisk / sekunda<span id="hud-pasive" style="color: var(--color-green);">$0</span></div>
+            <div>Síla Kliknutí<span id="hud-click-power" style="color: var(--color-blue);">$1</span></div>
+            <div>Crypto Portfolio<span id="hud-crypto-owned" style="color: var(--color-gold);">0 CBC</span></div>
         </div>
     </div>
 
@@ -155,7 +285,7 @@
             <span class="icon">👑</span><span>Majetek</span>
         </button>
         <button class="nav-btn" id="nav-gambling" onclick="switchTab('gambling')">
-            <span class="icon">🎰</span><span>Hazard</span>
+            <span class="icon">🎰</span><span>Casino</span>
         </button>
         <button class="nav-btn" id="nav-settings" onclick="switchTab('settings')">
             <span class="icon">👤</span><span>Účet</span>
@@ -169,18 +299,18 @@
             <div class="card" style="margin-bottom:8px;">
                 <div class="info-block">
                     <h3>Těžební AI Core</h3>
-                    <p>Upgrade zvýší klik o <span id="click-next-gain" style="color:var(--color-blue);">+2</span></p>
-                    <p style="color: var(--color-gold);" id="click-cost">Cena: $150</p>
+                    <p>Zvýší hodnotu kliku o <span id="click-next-gain" style="color:var(--color-blue); font-weight:bold;">+2</span></p>
+                    <p style="color: var(--color-gold); font-weight:700; margin-top:2px;" id="click-cost">Cena: $150</p>
                 </div>
                 <button class="btn" onclick="buyClickUpgrade()">Vylepšit</button>
             </div>
 
             <div class="card">
                 <div class="info-block">
-                    <h3>⚡ Kryptoměnový Těžební Hardware</h3>
-                    <p>Zvýší automatickou těžbu CyberCoinu</p>
-                    <p id="crypto-hardware-status">Aktuálně těžíš: 0.0 CBC/s</p>
-                    <p style="color: var(--color-gold);" id="crypto-hardware-cost">Cena: $2,500</p>
+                    <h3>⚡ Kryptoměnový Těžební Rig</h3>
+                    <p>Zvýší automatické generování CyberCoinu</p>
+                    <p id="crypto-hardware-status" style="font-weight:bold; color:var(--color-purple);">Aktuálně těžíš: 0.0 CBC/s</p>
+                    <p style="color: var(--color-gold); font-weight:700; margin-top:2px;" id="crypto-hardware-cost">Cena: $2,500</p>
                 </div>
                 <button class="btn btn-purple" onclick="buyCryptoHardware()">Koupit Rig</button>
             </div>
@@ -190,67 +320,68 @@
         <div class="card">
             <div class="info-block">
                 <h3>🍏 Fruit Inc. (Akcie)</h3>
-                <p>Cena: <span id="stock-fruit-price" style="font-weight:bold;">$100</span> | Máš: <span id="stock-fruit-owned">0</span> ks</p>
+                <p>Tržní hodnota: <span id="stock-fruit-price" style="font-weight:bold; color:white;">$100</span></p>
+                <p>Vlastníš portfolia: <span id="stock-fruit-owned" style="font-weight:bold; color:var(--color-blue);">0</span> ks</p>
             </div>
             <div class="market-right">
-                <div class="chart-container"><canvas id="chart-fruit" width="70" height="35"></canvas></div>
+                <div class="chart-container"><canvas id="chart-fruit" width="75" height="38"></canvas></div>
                 <div style="display:flex; flex-direction:column; gap:4px;">
-                    <button class="btn btn-success" style="padding:4px 8px; font-size:10px;" onclick="buyAsset('fruit')">BUY</button>
-                    <button class="btn btn-danger" style="padding:4px 8px; font-size:10px;" onclick="sellAsset('fruit')">SELL</button>
+                    <button class="btn btn-success" style="padding:4px 10px; font-size:11px;" onclick="buyAsset('fruit')">BUY</button>
+                    <button class="btn btn-danger" style="padding:4px 10px; font-size:11px;" onclick="sellAsset('fruit')">SELL</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="tab-business" class="tab-content">
-        <div class="profile-bar" style="background-color: rgba(0,0,0,0.2); margin-bottom:0;">
-            <div style="font-weight:bold; color:var(--color-blue);">Obsazené sloty firmy: <span id="biz-slots-display">0 / 10</span></div>
+        <div class="profile-bar" style="background-color: rgba(59, 130, 246, 0.1); border-color: rgba(59,130,246,0.2); margin-bottom:0;">
+            <div style="font-weight:bold; color:var(--color-blue); font-size:13px; text-align:center; width:100%;">Využití průmyslových slotů: <span id="biz-slots-display">0 / 10</span></div>
         </div>
 
-        <div class="section-title">Založit nový podnik (Stojí 1 slot)</div>
-        <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="section-title">Založit nový korporát (Spotřebuje 1 slot)</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
             <div class="card">
                 <div class="info-block">
-                    <h3>🛒 Supermarket</h3>
-                    <p>Počáteční investice: $5,000</p>
+                    <h3>🛒 Národní Supermarket</h3>
+                    <p>Stabilní nízké riziko | Investice: $5,000</p>
                 </div>
-                <button class="btn btn-success" onclick="buildNewBusiness('supermarket', 5000)">Postavit</button>
+                <button class="btn btn-success" onclick="buildNewBusiness('supermarket', 5000)">Založit</button>
             </div>
             <div class="card">
                 <div class="info-block">
-                    <h3>🚌 Dopravní podnik (MHD)</h3>
-                    <p>Počáteční investice: $65,000</p>
+                    <h3>🚌 Regionální Doprava (MHD)</h3>
+                    <p>Střední výnosnost | Investice: $65,000</p>
                 </div>
-                <button class="btn btn-success" onclick="buildNewBusiness('mhd', 65000)">Postavit</button>
+                <button class="btn btn-success" onclick="buildNewBusiness('mhd', 65000)">Založit</button>
             </div>
             <div class="card">
                 <div class="info-block">
-                    <h3>⚽ Fotbalový Klub</h3>
-                    <p>Počáteční investice: $500,000</p>
+                    <h3>⚽ Prvoligový Fotbalový Klub</h3>
+                    <p>Vysoké zisky a prestiž | Investice: $500,000</p>
                 </div>
-                <button class="btn btn-success" onclick="buildNewBusiness('football', 500000)">Postavit</button>
+                <button class="btn btn-success" onclick="buildNewBusiness('football', 500000)">Založit</button>
             </div>
         </div>
 
-        <div class="section-title">Tvoje postavené budovy</div>
-        <div id="owned-businesses-list" style="display:flex; flex-direction:column; gap:10px;"></div>
+        <div class="section-title">Tvoje aktivní holdinky</div>
+        <div id="owned-businesses-list" style="display:flex; flex-direction:column; gap:12px;"></div>
     </div>
 
     <div id="tab-assets" class="tab-content">
-        <div class="section-title">Nákup statusového majetku (Nutné pro Rank)</div>
+        <div class="section-title">Akvizice Luxusního Majetku</div>
         <div class="card">
             <div class="info-block">
-                <h3>🏎️ Sportovní Superauto</h3>
-                <p id="asset-car-count">Vlastníš: 0</p>
-                <p style="color: var(--color-red);">Údržba: -$50/s</p>
+                <h3>🏎️ Exotické Superauto</h3>
+                <p id="asset-car-count">V garáži: 0</p>
+                <p style="color: var(--color-red); font-weight:700;">Údržba a pojištění: -$50/s</p>
             </div>
             <button class="btn btn-gold" onclick="buyLuxuryAsset('car')">Koupit ($<span id="asset-car-cost">120k</span>)</button>
         </div>
         <div class="card">
             <div class="info-block">
                 <h3>🛥️ Luxusní Superjachta</h3>
-                <p id="asset-yacht-count">Vlastníš: 0</p>
-                <p style="color: var(--color-red);">Údržba: -$400/s</p>
+                <p id="asset-yacht-count">V přístavu: 0</p>
+                <p style="color: var(--color-red); font-weight:700;">Údržba posádky: -$400/s</p>
             </div>
             <button class="btn btn-gold" onclick="buyLuxuryAsset('yacht')">Koupit ($<span id="asset-yacht-cost">1.5M</span>)</button>
         </div>
@@ -258,6 +389,7 @@
 
     <div id="tab-gambling" class="tab-content">
         <div class="casino-box">
+            <div class="balance-label" style="text-align:center; display:block; color:#c084fc;">High-Stakes Kolo Štěstí</div>
             <div class="bet-grid">
                 <div id="bet-100" class="bet-chip selected" onclick="selectBet(100)">$100</div>
                 <div id="bet-500" class="bet-chip" onclick="selectBet(500)">$500</div>
@@ -265,44 +397,59 @@
                 <div id="bet-10000" class="bet-chip" onclick="selectBet(10000)">$10,000</div>
             </div>
             <div id="wheel-result" class="wheel-screen">READY</div>
-            <button id="spin-btn" class="btn btn-purple" style="width:100%; padding:12px;" onclick="spinWheel()">Roztočit Kolo</button>
-            <p id="casino-timer" style="font-size:10px; color:var(--text-muted); text-align:center; margin-top:5px;"></p>
+            <button id="spin-btn" class="btn btn-purple btn-block" onclick="spinWheel()">Roztočit Kolo</button>
+            <p id="casino-timer" style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:8px; font-weight:700;"></p>
         </div>
 
-        <div class="section-title">Kufříky</div>
+        <div class="section-title">Sběratelské Kufříky</div>
         <div class="card" style="flex-direction:column; align-items:stretch; gap:10px;">
-            <div style="display:flex; justify-content:between; align-items:center;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
-                    <h4 style="margin:0; color:var(--color-gold);">🟫 Bronzový Kufřík</h4>
-                    <p style="font-size:11px; color:var(--text-muted);">Cena: $500</p>
+                    <h4 style="margin:0; color:var(--color-gold); font-size:15px;">🟫 Bronzový Kufřík s hotovostí</h4>
+                    <p style="font-size:12px; color:var(--text-muted);">Cena za otevření: $500</p>
                 </div>
                 <button class="btn btn-small" onclick="openCase('bronze', 500)">Otevřít</button>
             </div>
-            <div id="case-anim-bronze" class="case-anim-box">ZAVŘENO</div>
+            <div id="case-anim-bronze" class="case-anim-box">NEAKTIVNÍ</div>
         </div>
     </div>
 
     <div id="tab-settings" class="tab-content">
-        <div class="section-title">🔐 Přihlášení / Registrace</div>
-        <div class="card" style="flex-direction:column; align-items:stretch; gap:4px;">
+        <div class="section-title">👤 Správa Cloud Účtu</div>
+        
+        <div id="auth-logged-view" class="card" style="display:none; flex-direction:column; align-items:stretch; gap:12px; background: linear-gradient(135deg, #064e3b 0%, #141b2d 100%); border-color: var(--color-green);">
+            <div style="text-align:center;">
+                <p style="margin:0; font-size:11px; text-transform:uppercase; color:#34d399; letter-spacing:1px; font-weight:bold;">Aktivní Cloud Profil</p>
+                <h3 id="auth-logged-username" style="margin:4px 0; font-size:22px; color:white;">JMÉNO</h3>
+                <p style="margin:0; font-size:12px; color:var(--text-muted);">Všechna data jsou v bezpečí a synchronizována.</p>
+            </div>
+            <button class="btn btn-danger-outline btn-block" style="padding:8px;" onclick="logOut()">Odhlásit se z účtu</button>
+        </div>
+
+        <div id="auth-guest-view" class="card" style="flex-direction:column; align-items:stretch; gap:4px;">
+            <p style="margin:0 0 8px 0; font-size:12px; color:var(--text-muted); text-align:center;">Přihlas se pro sdílení postupu a zobrazení v síni slávy.</p>
             <input type="text" id="auth-username" class="profile-input" placeholder="Uživatelské jméno">
-            <input type="password" id="auth-password" class="profile-input" placeholder="Heslo">
+            <input type="password" id="auth-password" class="profile-input" placeholder="Heslo (min. 4 znaky)">
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:5px;">
                 <button class="btn btn-success" onclick="handleAuth('login')">Přihlásit se</button>
                 <button class="btn btn-purple" onclick="handleAuth('register')">Registrovat</button>
             </div>
-            <div id="sync-status-text" style="color: var(--text-muted); text-align:center; margin-top:5px;">Hraješ lokálně (Data se uloží na cloud po přihlášení)</div>
         </div>
 
-        <div class="section-title">💎 Prestige Reset</div>
-        <div class="card" style="flex-direction:column; align-items:stretch; text-align:center;">
-            <p style="margin:0; font-size:11px; color:var(--text-muted);">Vyžaduje hodnost Finanční Magnát a majetek v hodnotě $25M. Resetuje hru s permanentním bonusem x2.</p>
-            <button class="btn btn-gold" style="margin-top:5px;" onclick="triggerPrestige()">Aktivovat Prestige</button>
+        <div class="section-title">💾 Bezpečné Zálohování</div>
+        <button class="btn btn-success btn-block" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);" onclick="forceManualSave()">
+            💾 ZÁLOHOVAT DATA NYNÍ
+        </button>
+
+        <div class="section-title">💎 Prestige Reset Core</div>
+        <div class="card" style="flex-direction:column; align-items:stretch; text-align:center; gap:6px;">
+            <p style="margin:0; font-size:12px; color:var(--text-muted);">Vyžaduje hodnost Finanční Magnát a hotovost $25,000,000. Resetuje impérium, získáš permanentní multiplikátor zisku +100% (x2, x3...).</p>
+            <button class="btn btn-gold" onclick="triggerPrestige()">Aktivovat Prestige Reset</button>
         </div>
 
-        <div class="section-title">🏆 Globální Síň Slávy</div>
+        <div class="section-title">🏆 Top 5 Globální Magnáti</div>
         <div class="card" style="flex-direction:column; align-items:stretch;">
-            <div id="leaderboard-box" class="leaderboard-list">Načítám nejbohatší magnáty...</div>
+            <div id="leaderboard-box" class="leaderboard-list">Načítám finanční žebříček...</div>
         </div>
     </div>
 
@@ -325,12 +472,11 @@
         let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
         const BIZ_TEMPLATES = {
-            supermarket: { title: "🛒 Supermarket", sub1: "Regály (Kapacita)", sub2: "Pokladní (Rychlost)", sub3: "Marketing (Návštěvnost)" },
-            mhd: { title: "🚌 Dopravní Podnik", sub1: "Autobusy (Kapacita)", sub2: "Řidiči (Spolehlivost)", sub3: "Depo (Údržba)" },
-            football: { title: "⚽ Fotbalový Klub", sub1: "Stadion (Kapacita)", sub2: "Hvězdní Hráči (Výhry)", sub3: "Tréninkové zázemí" }
+            supermarket: { title: "🛒 Supermarket Store", sub1: "Regály a Zásoby", sub2: "Rychlé Pokladny", sub3: "Lokální Marketing" },
+            mhd: { title: "🚌 Dopravní Podnik", sub1: "Moderní Autobusy", sub2: "Zkušení Řidiči", sub3: "Servisní Depa" },
+            football: { title: "⚽ Fotbalový Klub", sub1: "Kapacita Stadionu", sub2: "Hvězdní Útočníci", sub3: "Tréninkové Zázemí" }
         };
 
-        // ZÁCHRANNÁ KONTROLA: Převádí textové typy z databází zpět na čistá čísla
         function sanitizeState() {
             state.balance = Number(state.balance) || 0;
             state.clickPower = Number(state.clickPower) || 1;
@@ -365,10 +511,18 @@
             sanitizeState();
 
             if(lastUser) {
-                username = lastUser;
+                username = lastUser.toUpperCase();
                 isLoggedIn = true;
                 document.getElementById('profile-id-display').innerText = username;
+                
+                // Přepnutí UI správy účtu na přihlášený stav
+                document.getElementById('auth-guest-view').style.display = 'none';
+                document.getElementById('auth-logged-view').style.display = 'flex';
+                document.getElementById('auth-logged-username').innerText = username;
                 fetchCloudData();
+            } else {
+                document.getElementById('auth-guest-view').style.display = 'flex';
+                document.getElementById('auth-logged-view').style.display = 'none';
             }
             
             selectBet(state.selectedBet);
@@ -379,6 +533,22 @@
             startEconomicLoop();
         }
 
+        // Manuální vyvolání uložení s animací potvrzení
+        function forceManualSave() {
+            saveLocal();
+            if(isLoggedIn) {
+                saveCloud();
+            }
+            let popup = document.getElementById('save-popup');
+            popup.classList.add('show');
+            setTimeout(() => popup.classList.remove('show'), 2000);
+        }
+
+        function logOut() {
+            localStorage.removeItem('bizLoggedUser');
+            location.reload();
+        }
+
         async function fetchCloudData() {
             try {
                 let res = await fetch(`${FIREBASE_URL}users/${username.toLowerCase()}.json`);
@@ -386,8 +556,6 @@
                 if (cloudData) {
                     state = cloudData;
                     sanitizeState();
-                    document.getElementById('sync-status-text').innerHTML = "✅ Účet synchronizován s cloudem";
-                    document.getElementById('sync-status-text').style.color = "var(--color-green)";
                     updateUI();
                     renderBusinesses();
                 }
@@ -443,7 +611,7 @@
         function buildNewBusiness(type, cost) {
             cost = Number(cost);
             if (Number(state.balance) < cost) { alert("Nemáš dost peněz!"); return; }
-            if (state.ownedBusinesses.length >= 10) { alert("Maximum 10 slotů!"); return; }
+            if (state.ownedBusinesses.length >= 10) { alert("Maximum je 10 aktivních slots!"); return; }
             
             state.balance -= cost;
             state.ownedBusinesses.push({
@@ -452,7 +620,7 @@
                 level1: 1, level2: 1, level3: 1,
                 cost1: Math.floor(cost * 0.4), cost2: Math.floor(cost * 0.5), cost3: Math.floor(cost * 0.6)
             });
-            saveLocal(); saveCloud(); updateUI(); renderBusinesses();
+            saveLocal(); if(isLoggedIn) saveCloud(); updateUI(); renderBusinesses();
         }
 
         function upgradeSubSys(bizId, sysIndex) {
@@ -465,8 +633,8 @@
                 state.balance -= currentCost;
                 biz[levelKey] = (Number(biz[levelKey]) || 1) + 1;
                 biz[costKey] = Math.floor(currentCost * 1.7);
-                saveLocal(); saveCloud(); updateUI(); renderBusinesses();
-            } else { alert("Nedostatek financí!"); }
+                saveLocal(); if(isLoggedIn) saveCloud(); updateUI(); renderBusinesses();
+            } else { alert("Nedostatek financí na upgrade!"); }
         }
 
         function renderBusinesses() {
@@ -475,7 +643,7 @@
             document.getElementById('biz-slots-display').innerText = `${state.ownedBusinesses ? state.ownedBusinesses.length : 0} / 10`;
 
             if(!state.ownedBusinesses || state.ownedBusinesses.length === 0) { 
-                container.innerHTML = "<p style='font-size:12px; color:var(--text-muted); text-align:center;'>Zatím nevlastníš žádné budovy.</p>"; 
+                container.innerHTML = "<p style='font-size:13px; color:var(--text-muted); text-align:center; padding: 20px 0;'>Zatím nevlastníš žádné průmyslové budovy.</p>"; 
                 return; 
             }
 
@@ -484,23 +652,23 @@
                 let currentPayout = calculateSingleBizPayout(biz);
 
                 container.innerHTML += `
-                    <div class="card" style="flex-direction:column; align-items:stretch; gap:10px; background-color:#162235; margin-top:10px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px;">
-                            <h4 style="margin:0; font-size:15px; color:var(--color-gold);">${t.title}</h4>
-                            <span style="color:var(--color-green); font-size:12px; font-weight:bold;">+$${currentPayout.toLocaleString()}/s</span>
+                    <div class="card" style="flex-direction:column; align-items:stretch; gap:10px; background-color:#192239; margin-top:4px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:8px;">
+                            <h4 style="margin:0; font-size:16px; color:var(--color-gold); font-weight:800;">${t.title}</h4>
+                            <span style="color:var(--color-green); font-size:13px; font-weight:900;">+$${currentPayout.toLocaleString()}/s</span>
                         </div>
                         <div>
                             <div class="sub-upgrade-row">
-                                <div><p style="margin:0; font-size:12px;"><b>${t.sub1}</b> (Lev: ${biz.level1})</p></div>
-                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 1)">Vylepšit ($${Number(biz.cost1).toLocaleString()})</button>
+                                <div><p style="margin:0; font-size:12px; color:white;"><b>${t.sub1}</b> (Lvl ${biz.level1})</p></div>
+                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 1)">$${Number(biz.cost1).toLocaleString()}</button>
                             </div>
                             <div class="sub-upgrade-row">
-                                <div><p style="margin:0; font-size:12px;"><b>${t.sub2}</b> (Lev: ${biz.level2})</p></div>
-                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 2)">Najmout ($${Number(biz.cost2).toLocaleString()})</button>
+                                <div><p style="margin:0; font-size:12px; color:white;"><b>${t.sub2}</b> (Lvl ${biz.level2})</p></div>
+                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 2)">$${Number(biz.cost2).toLocaleString()}</button>
                             </div>
                             <div class="sub-upgrade-row">
-                                <div><p style="margin:0; font-size:12px;"><b>${t.sub3}</b> (Lev: ${biz.level3})</p></div>
-                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 3)">Rozšířit ($${Number(biz.cost3).toLocaleString()})</button>
+                                <div><p style="margin:0; font-size:12px; color:white;"><b>${t.sub3}</b> (Lvl ${biz.level3})</p></div>
+                                <button class="btn btn-small" onclick="upgradeSubSys('${biz.id}', 3)">$${Number(biz.cost3).toLocaleString()}</button>
                             </div>
                         </div>
                     </div>`;
@@ -522,8 +690,8 @@
             let cost = id === 'car' ? 120000 : 1500000;
             if(Number(state.balance) >= cost) {
                 state.balance -= cost; state.luxury[id]++;
-                updateRank(); updateUI(); saveLocal(); saveCloud();
-            } else { alert("Málo peněz!"); }
+                updateRank(); updateUI(); saveLocal(); if(isLoggedIn) saveCloud();
+            } else { alert("Nedostatečný zůstatek na účtu!"); }
         }
 
         function buyCryptoHardware() {
@@ -531,26 +699,31 @@
             if(Number(state.balance) >= hwCost) {
                 state.balance -= hwCost; 
                 state.cryptoHardwareLevel = (Number(state.cryptoHardwareLevel) || 0) + 1;
-                state.cryptoHardwareCost = Math.gradient ? Math.floor(hwCost * 1.9) : Math.floor(hwCost * 1.9);
-                updateUI(); saveLocal(); saveCloud();
-            } else { alert("Málo peněz!"); }
+                state.cryptoHardwareCost = Math.floor(hwCost * 1.9);
+                updateUI(); saveLocal(); if(isLoggedIn) saveCloud();
+            } else { alert("Nedostatečný zůstatek na účtu!"); }
         }
 
         function updateRank() {
             let bal = Number(state.balance);
-            let rank = "Začátečník 💼";
-            if (bal > 10000000) rank = "Finanční Magnát 👑";
-            else if (bal > 1000000) rank = "Milionář 💰";
-            else if (bal > 100000) rank = "Investor 📈";
-            document.getElementById('profile-rank-display').innerText = rank;
+            let rank = "Začátečník";
+            let color = "#64748b";
+            if (bal > 10000000) { rank = "Finanční Magnát 👑"; color = "var(--color-gold)"; }
+            else if (bal > 1000000) { rank = "Milionář 💰"; color = "var(--color-green)"; }
+            else if (bal > 100000) { rank = "Investor 📈"; color = "var(--color-blue)"; }
+            
+            let badge = document.getElementById('profile-rank-badge');
+            badge.innerText = rank;
+            badge.style.backgroundColor = color + "20";
+            badge.style.color = color;
         }
 
         function triggerPrestige() {
-            if (Number(state.balance) < 25000000) { alert("Potřebuješ mít aspoň $25M!"); return; }
-            if(confirm("Resetovat hru s bonusem x" + (Number(state.prestigeMultiplier) + 1) + "?")) {
+            if (Number(state.balance) < 25000000) { alert("K aktivaci Prestige Core potřebuješ aspoň $25M!"); return; }
+            if(confirm("Provede se Prestige Reset. Celá hra se restartuje, ale získáš trvalý bonus zisku x" + (Number(state.prestigeMultiplier) + 1) + ". Pokračovat?")) {
                 let m = Number(state.prestigeMultiplier), p = state.password;
                 state = JSON.parse(JSON.stringify(DEFAULT_STATE)); state.prestigeMultiplier = m + 1; state.password = p;
-                saveLocal(); saveCloud(); location.reload();
+                saveLocal(); if(isLoggedIn) saveCloud(); location.reload();
             }
         }
 
@@ -562,7 +735,7 @@
                 for(let k in all) { if(all[k]) list.push({ name: k.toUpperCase(), cash: Number(all[k].balance) || 0 }); }
                 list.sort((a,b) => b.cash - a.cash); box.innerHTML = "";
                 list.slice(0, 5).forEach((p, idx) => {
-                    box.innerHTML += `<div class="leaderboard-item"><div>${idx+1}. 👑 <b>${p.name}</b></div><div style="color:var(--color-green)">$${Math.floor(p.cash).toLocaleString()}</div></div>`;
+                    box.innerHTML += `<div class="leaderboard-item"><div>${idx+1}. 🏆 <b>${p.name}</b></div><div style="color:var(--color-green); font-weight:800;">$${Math.floor(p.cash).toLocaleString()}</div></div>`;
                 });
             } catch(e){}
         }
@@ -594,8 +767,8 @@
                 state.balance -= cCost; 
                 state.clickPower = Number(state.clickPower) + Number(state.clickUpgradeStep); 
                 state.clickUpgradeStep = Number(state.clickUpgradeStep) + 2;
-                state.clickUpgradeCost = Math.floor(cCost * 1.8); updateUI(); saveLocal(); saveCloud();
-            } else { alert("Málo peněz!"); }
+                state.clickUpgradeCost = Math.floor(cCost * 1.8); updateUI(); saveLocal(); if(isLoggedIn) saveCloud();
+            } else { alert("Nedostatek financí na upgrade!"); }
         }
 
         function buyAsset(id) {
@@ -605,7 +778,7 @@
                 state.balance -= price; 
                 asset.owned = (Number(asset.owned) || 0) + 1; 
                 updateUI(); saveLocal(); 
-            } else { alert("Málo peněz!"); }
+            } else { alert("Nedostatek financí!"); }
         }
         
         function sellAsset(id) {
@@ -627,7 +800,7 @@
         function spinWheel() {
             let now = Date.now(); if (now - Number(state.lastSpinTime) < 15000) return;
             let bet = Number(state.selectedBet) || 100; 
-            if (Number(state.balance) < bet) { alert("Málo peněz!"); return; }
+            if (Number(state.balance) < bet) { alert("Nemáš dost peněz na sázku!"); return; }
             
             state.lastSpinTime = now; 
             state.balance -= bet; 
@@ -646,7 +819,7 @@
                     state.balance += win;
                     
                     resDisplay.innerHTML = multiplier > 1 ? `<span style="color:var(--color-green)">${multiplier}x (+$${win.toLocaleString()})</span>` : `<span style="color:var(--color-red)">${multiplier}x</span>`;
-                    btn.disabled = false; updateRank(); updateUI(); saveLocal(); saveCloud();
+                    btn.disabled = false; updateRank(); updateUI(); saveLocal(); if(isLoggedIn) saveCloud();
                 }
             }, 90);
         }
@@ -654,7 +827,7 @@
         const CASES = { bronze: [{name:"☕ Espresso",m:1.2}, {name:"💎 Safír",m:4.5}] };
         function openCase(tier, cost) {
             cost = Number(cost);
-            if (Number(state.balance) < cost) { alert("Málo peněz!"); return; }
+            if (Number(state.balance) < cost) { alert("Nedostatek financí!"); return; }
             state.balance -= cost; updateUI();
             let box = document.getElementById(`case-anim-${tier}`), pool = CASES[tier], ticks = 0;
             let loop = setInterval(() => {
@@ -664,7 +837,7 @@
                     let final = roll < 0.80 ? pool[0] : pool[1];
                     let win = Math.floor(cost * final.m); state.balance += win;
                     box.innerHTML = `⭐ <span style="color:var(--color-gold)">${final.name} (+$${win.toLocaleString()})</span>`;
-                    updateRank(); updateUI(); saveLocal(); saveCloud();
+                    updateRank(); updateUI(); saveLocal(); if(isLoggedIn) saveCloud();
                 }
             }, 90);
         }
@@ -712,12 +885,13 @@
             hudPasive.innerText = (totalSec >= 0 ? '+$' : '-$') + Math.abs(totalSec).toLocaleString() + '/s';
             hudPasive.style.color = totalSec >= 0 ? 'var(--color-green)' : 'var(--color-red)';
 
-            document.getElementById('asset-car-count').innerText = `Vlastníš: ${state.luxury ? state.luxury.car : 0}`;
-            document.getElementById('asset-yacht-count').innerText = `Vlastníš: ${state.luxury ? state.luxury.yacht : 0}`;
+            document.getElementById('asset-car-count').innerText = `V garáži: ${state.luxury ? state.luxury.car : 0}`;
+            document.getElementById('asset-yacht-count').innerText = `V přístavu: ${state.luxury ? state.luxury.yacht : 0}`;
             if(state.market && state.market.fruit) document.getElementById('stock-fruit-owned').innerText = Number(state.market.fruit.owned) || 0;
             
             let remaining = 15 - Math.floor((Date.now() - Number(state.lastSpinTime)) / 1000);
-            document.getElementById('casino-timer').innerText = remaining > 0 ? `Znovu za: ${remaining}s` : "Kolo připraveno.";
+            document.getElementById('casino-timer').innerText = remaining > 0 ? `Znovu za: ${remaining}s` : "Kolo štěstí připraveno";
+            document.getElementById('profile-prestige-display').innerText = `x${Number(state.prestigeMultiplier)}`;
         }
 
         function startEconomicLoop() {
@@ -731,11 +905,11 @@
                 state.cryptoInventory = Number(state.cryptoInventory) + (Number(state.cryptoHardwareLevel) * 0.1 * Number(state.prestigeMultiplier));
 
                 updateUI(); 
-                saveLocal();
+                saveLocal(); // Auto-save do paměti každou sekundu
 
                 cTick++; 
                 if(cTick >= 5) { 
-                    saveCloud(); 
+                    if(isLoggedIn) saveCloud(); // Auto-save na cloud každých 5 sekund
                     cTick = 0; 
                 }
             }, 1000);
