@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Business Empire: Infinite Pro 2026</title>
+    <title>Do you wanna money (DYWM)</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="BizEmpire">
+    <meta name="apple-mobile-web-app-title" content="DYWM">
 
     <style>
         :root {
@@ -235,16 +235,16 @@
 
     <div id="save-popup">⚡ Data bezpečně uložena!</div>
 
-    <!-- PROFILOVÁ LIŠTA -->
+    <!-- PROFILOVÁ LIŠTA (DYWM REDESIGN) -->
     <div class="profile-bar">
-        <div>Uživatel: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">Anonym</span></div>
-        <div>Multiplikátor: <span id="profile-prestige-display" style="color:var(--color-gold); font-weight:bold;">x1</span></div>
+        <div>DYWM ID: <span id="profile-id-display" style="color:var(--color-gold); font-weight:bold;">Anonym</span></div>
+        <div>Prestige Core: <span id="profile-prestige-display" style="color:var(--color-gold); font-weight:bold;">x1</span></div>
         <div id="profile-rank-badge" class="badge-status" style="background-color:#1e293b; color:var(--text-muted);">Začátečník</div>
     </div>
 
     <!-- HORNÍ HUD PANEL -->
     <div id="main-hud-panel" class="main-hud">
-        <div class="balance-label">Dostupný Kapitál</div>
+        <div class="balance-label">DYWM Finanční Likvidita</div>
         <div id="balance" class="balance">$1,000</div>
         <div class="stats-grid">
             <div>Zisk / sekunda<span id="hud-pasive" style="color: var(--color-green);">$0</span></div>
@@ -272,7 +272,7 @@
         </button>
     </div>
 
-    <!-- TAB 1: KLIKER & TRH (NYNÍ SE SMĚNÁRNOU KRYPTOMĚN) -->
+    <!-- TAB 1: KLIKER & TRH -->
     <div id="tab-clicker" class="tab-content active">
         <div class="clicker-wrap">
             <div class="click-vault-giant" onclick="clickVault()">💎</div>
@@ -313,7 +313,7 @@
                 </div>
             </div>
         </div>
-        <!-- KRYPTOMĚNA (PŘIDÁNO NAKUPOVÁNÍ / PRODÁVÁNÍ) -->
+        <!-- KRYPTOMĚNA -->
         <div class="card">
             <div class="info-block">
                 <h3>🪙 CyberCoin (CBC)</h3>
@@ -336,7 +336,7 @@
             <div style="font-weight:bold; color:var(--color-blue); font-size:13px; text-align:center; width:100%;">Využití průmyslových slotů: <span id="biz-slots-display">0 / 10</span></div>
         </div>
 
-        <div class="section-title">Založit nový korporát (Stojí 1 slot)</div>
+        <div class="section-title">Založit nový podnik (Stojí 1 slot)</div>
         <div style="display:flex; flex-direction:column; gap:10px;">
             <div class="card">
                 <div class="info-block">
@@ -389,6 +389,7 @@
     <!-- TAB 4: HAZARD -->
     <div id="tab-gambling" class="tab-content">
         <div class="casino-box">
+            <div class="balance-label" style="text-align:center; display:block; color:#c084fc;">DYWM High-Stakes Kolo Štěstí</div>
             <div class="bet-grid">
                 <div id="bet-100" class="bet-chip selected" onclick="selectBet(100)">$100</div>
                 <div id="bet-500" class="bet-chip" onclick="selectBet(500)">$500</div>
@@ -400,7 +401,7 @@
             <p id="casino-timer" style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:8px; font-weight:700;"></p>
         </div>
 
-        <div class="section-title">Kufříky</div>
+        <div class="section-title">Sběratelské Kufříky</div>
         <div class="card" style="flex-direction:column; align-items:stretch; gap:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
@@ -413,17 +414,17 @@
         </div>
     </div>
 
-    <!-- TAB 5: ÚČET -->
+    <!-- TAB 5: DYWM ÚČET -->
     <div id="tab-settings" class="tab-content">
-        <div class="section-title">👤 Správa Cloud Účtu</div>
+        <div class="section-title">👤 Správa DYWM Cloud Účtu</div>
         
         <div id="auth-logged-view" class="card" style="display:none; flex-direction:column; align-items:stretch; gap:12px; background: linear-gradient(135deg, #064e3b 0%, #141b2d 100%); border-color: var(--color-green);">
             <div style="text-align:center;">
-                <p style="margin:0; font-size:11px; text-transform:uppercase; color:#34d399; letter-spacing:1px; font-weight:bold;">Aktivní Cloud Profil</p>
+                <p style="margin:0; font-size:11px; text-transform:uppercase; color:#34d399; letter-spacing:1px; font-weight:bold;">Aktivní DYWM Profil</p>
                 <h3 id="auth-logged-username" style="margin:4px 0; font-size:22px; color:white;">JMÉNO</h3>
-                <p style="margin:0; font-size:12px; color:var(--text-muted);">Všechna data jsou v bezpečí a synchronizována.</p>
+                <p style="margin:0; font-size:12px; color:var(--text-muted);">Všechna data jsou bezpečně šifrována na cloudu.</p>
             </div>
-            <button class="btn btn-danger-outline btn-block" style="padding:8px;" onclick="logOut()">Odhlásit se z účtu</button>
+            <button class="btn btn-danger-outline btn-block" style="padding:8px;" onclick="logOut()">Odhlásit se z DYWM sítě</button>
         </div>
 
         <div id="auth-guest-view" class="card" style="flex-direction:column; align-items:stretch; gap:4px;">
@@ -435,9 +436,9 @@
             </div>
         </div>
 
-        <div class="section-title">💾 Bezpečné Zálohování</div>
+        <div class="section-title">💾 Bezpečné Zálohování Core</div>
         <button class="btn btn-success btn-block" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);" onclick="forceManualSave()">
-            💾 ZÁLOHOVAT DATA NYNÍ
+            💾 ZÁLOHOVAT DATA DO DYWM CLOUDU
         </button>
 
         <div class="section-title">💎 Prestige Reset Core</div>
@@ -446,7 +447,7 @@
             <button class="btn btn-gold" onclick="triggerPrestige()">Aktivovat Prestige Reset</button>
         </div>
 
-        <div class="section-title">🏆 Top 5 Globální Magnáti</div>
+        <div class="section-title">🏆 Top 5 Globální Magnáti DYWM</div>
         <div class="card" style="flex-direction:column; align-items:stretch;">
             <div id="leaderboard-box" class="leaderboard-list">Načítám finanční žebříček...</div>
         </div>
@@ -458,7 +459,7 @@
         // --- DATA JÁDRO ---
         const DEFAULT_STATE = {
             balance: 1000, clickPower: 1, clickUpgradeCost: 150, clickUpgradeStep: 2, selectedBet: 100, lastSpinTime: 0,
-            password: "", prestigeMultiplier: 1, lastSaveTime: 0, // Časová značka pro offline výdělky
+            password: "", prestigeMultiplier: 1, lastSaveTime: 0,
             cryptoHardwareLevel: 0, cryptoHardwareCost: 2500, cryptoInventory: 0,
             luxury: { car: 0, yacht: 0, island: 0 },
             ownedBusinesses: [],
@@ -472,9 +473,9 @@
         let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
 
         const BIZ_TEMPLATES = {
-            supermarket: { title: "🛒 Supermarket Store", sub1: "Regály a Zásoby", sub2: "Rychlé Pokladny", sub3: "Marketing (Synergie Lvl 5+)" },
-            mhd: { title: "🚌 Dopravní Podnik", sub1: "Moderní Autobusy", sub2: "Zkušení Řidiči", sub3: "Servis (Synergie Lvl 5+)" },
-            football: { title: "⚽ Fotbalový Klub", sub1: "Kapacita Stadionu", sub2: "Hvězdní Útočníci", sub3: "Zázemí (Synergie Lvl 5+)" }
+            supermarket: { title: "🛒 Supermarket Store", sub1: "Regály a Zásoby", sub2: "Rychlé Pokladny", sub3: "Lokální Marketing" },
+            mhd: { title: "🚌 Dopravní Podnik", sub1: "Moderní Autobusy", sub2: "Zkušení Řidiči", sub3: "Servisní Depa" },
+            football: { title: "⚽ Fotbalový Klub", sub1: "Kapacita Stadionu", sub2: "Hvězdní Útočníci", sub3: "Tréninkové Zázemí" }
         };
 
         function sanitizeState() {
@@ -521,24 +522,22 @@
             } else {
                 document.getElementById('auth-guest-view').style.display = 'flex';
                 document.getElementById('auth-logged-view').style.display = 'none';
-                calculateOfflineEarnings(); // Spuštění offline výpočtu pro lokální save
+                calculateOfflineEarnings();
             }
             
             selectBet(state.selectedBet); updateRank(); updateUI(); renderBusinesses(); loadLeaderboard(); startEconomicLoop();
         }
 
-        // --- VÝPOČET PASIVNÍCH JMEŇÍ NA POZADÍ (OFFLINE INCOME) ---
         function calculateOfflineEarnings() {
             if (!state.lastSaveTime || state.lastSaveTime === 0) return;
             let now = Date.now();
             let secondsAway = Math.floor((now - state.lastSaveTime) / 1000);
             
-            if (secondsAway > 15) { // Spustit pouze pokud byl pryč déle než 15 sekund
+            if (secondsAway > 15) {
                 let totalBizIncome = 0;
                 state.ownedBusinesses.forEach(b => { totalBizIncome += calculateSingleBizPayout(b); });
                 let luxuryExpenses = (Number(state.luxury.car) * 50) + (Number(state.luxury.yacht) * 400);
                 let incomePerSecond = totalBizIncome - luxuryExpenses;
-
                 let cryptoPerSecond = (Number(state.cryptoHardwareLevel) * 0.1 * Number(state.prestigeMultiplier));
 
                 if (incomePerSecond > 0 || cryptoPerSecond > 0) {
@@ -549,7 +548,7 @@
                     state.cryptoInventory += totalCryptoEarned;
 
                     setTimeout(() => {
-                        alert(`💤 Vítej zpět! Zatímco jsi byl pryč (${Math.floor(secondsAway/60)} minut), tvé impérium ti vygenerovalo:\n\n💵 Hotovost: +$${totalCashEarned.toLocaleString()}\n🪙 CyberCoin: +${totalCryptoEarned.toFixed(1)} CBC`);
+                        alert(`💤 DYWM Offline Income Core:\n\nTvé korporace běžely na pozadí ${Math.floor(secondsAway/60)} minut a vydělaly:\n\n💵 Hotovost: +$${totalCashEarned.toLocaleString()}\n🪙 CyberCoin: +${totalCryptoEarned.toFixed(1)} CBC`);
                         updateUI();
                     }, 800);
                 }
@@ -571,7 +570,7 @@
                 let cloudData = await res.json();
                 if (cloudData) {
                     state = cloudData; sanitizeState();
-                    calculateOfflineEarnings(); // Výpočet po stažení dat z cloudu
+                    calculateOfflineEarnings();
                     updateUI(); renderBusinesses();
                 }
             } catch(e){}
@@ -666,8 +665,6 @@
             if(biz.type === 'supermarket') base = (l1 * 4 + l2 * 6 + l3 * 12);
             if(biz.type === 'mhd') base = (l1 * 25 + l2 * 45 + l3 * 90);
             if(biz.type === 'football') base = (l1 * 210 + l2 * 450 + l3 * 850);
-            
-            // MARKETINGOVÝ MANAŽERSKÝ BONUS (LEVEL 5+ DÁ +25% BONUS)
             if (l3 >= 5) base = Math.floor(base * 1.25);
             return Math.floor(base * mult);
         }
@@ -685,14 +682,13 @@
             } else { alert("Málo peněz!"); }
         }
 
-        // --- NAKUPOVÁNÍ A PRODÁVÁNÍ KRYPTOMĚNY NA BURZE ---
         function buyCryptoCurrency() {
             let price = Number(state.market.cyber.price);
             if(Number(state.balance) >= price) {
                 state.balance -= price;
                 state.cryptoInventory = (Number(state.cryptoInventory) || 0) + 1;
                 updateUI(); saveLocal();
-            } else { alert("Nemáš dostatek hotovosti na nákup 1 CBC!"); }
+            } else { alert("Nedostatek financí!"); }
         }
 
         function sellCryptoCurrency() {
@@ -701,7 +697,7 @@
                 state.cryptoInventory = count - 1;
                 state.balance += Number(state.market.cyber.price);
                 updateUI(); saveLocal();
-            } else { alert("Nemáš u sebe ani 1 celý CyberCoin (CBC) k prodeji!"); }
+            } else { alert("Nemáš dost mincí k prodeji!"); }
         }
 
         function updateRank() {
@@ -714,7 +710,7 @@
 
         function triggerPrestige() {
             if (Number(state.balance) < 25000000) { alert("Potřebuješ mít aspoň $25M!"); return; }
-            if(confirm("Provede se Prestige Reset. Získáš permanentní bonus zisku x" + (Number(state.prestigeMultiplier) + 1) + ". Pokračovat?")) {
+            if(confirm("Spustí se Prestige Core reset s násobitelem x" + (Number(state.prestigeMultiplier) + 1) + "?")) {
                 let m = Number(state.prestigeMultiplier), p = state.password;
                 state = JSON.parse(JSON.stringify(DEFAULT_STATE)); state.prestigeMultiplier = m + 1; state.password = p;
                 saveLocal(); if(isLoggedIn) saveCloud(); location.reload();
@@ -864,7 +860,7 @@
                 state.balance = Number(state.balance) + (totalBizIncome - luxuryExpenses);
                 state.cryptoInventory = Number(state.cryptoInventory) + (Number(state.cryptoHardwareLevel) * 0.1 * Number(state.prestigeMultiplier));
 
-                state.lastSaveTime = Date.now(); // Uložíme aktuální timestamp pro výpočet offline výdělku
+                state.lastSaveTime = Date.now();
                 updateUI(); 
                 saveLocal();
 
